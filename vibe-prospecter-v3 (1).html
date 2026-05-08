@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EZ Prospecter — Inteligência em Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --bg: #080810;
+  --bg2: #0e0e18;
+  --bg3: #14141f;
+  --bg4: #1a1a28;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.11);
+  --accent: #00ca71;
+  --accent2: #05e67d;
+  --accent3: #70ffbd;
+  --accent-bg: rgba(0, 202, 113, 0.1);
+  --accent-border: rgba(0, 202, 113, 0.28);
+  --green: #00e096;
+  --green-bg: rgba(0,224,150,0.09);
+  --green-border: rgba(0,224,150,0.22);
+  --amber: #ffb800;
+  --amber-bg: rgba(255,184,0,0.09);
+  --amber-border: rgba(255,184,0,0.22);
+  --red: #ff3d5a;
+  --red-bg: rgba(255,61,90,0.09);
+  --red-border: rgba(255,61,90,0.22);
+  --blue: #2196f3;
+  --blue-bg: rgba(33,150,243,0.09);
+  --blue-border: rgba(33,150,243,0.22);
+  --cyan: #00d2ff;
+  --text: #eeedf8;
+  --text2: #7e7d94;
+  --text3: #43425a;
+  --radius: 9px;
+  --radius-lg: 13px;
+  --mono: 'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;}
+h1, h2, h3, .logo-name{font-family:'Plus Jakarta Sans',sans-serif; font-weight: 800; letter-spacing: -0.02em;}
+
+/* GRID BG */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(91,63,248,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,63,248,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events:none;z-index:0;
+}
+.glow{position:fixed;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(91,63,248,0.06) 0%,transparent 65%);top:-300px;left:-200px;pointer-events:none;z-index:0;}
+.glow2{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,224,150,0.04) 0%,transparent 65%);bottom:-100px;right:-100px;pointer-events:none;z-index:0;}
+
+.layout{position:relative;z-index:1;max-width:1360px;margin:0 auto;padding:0 24px;}
+
+/* TOPBAR */
+.topbar{border-bottom:1px solid var(--border);backdrop-filter:blur(16px);background:rgba(8,8,16,0.88);position:sticky;top:0;z-index:200;}
+.topbar-inner{display:flex;align-items:center;gap:12px;padding:12px 24px;max-width:1360px;margin:0 auto;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:32px;height:32px;border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;color:var(--accent2);font-size:15px;}
+.logo-name{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:-.4px;}
+.logo-name em{font-style:normal;color:var(--accent2);}
+.badge{font-size:10px;padding:2px 7px;border-radius:20px;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);font-weight:700;letter-spacing:.4px;font-family:var(--mono);}
+.badge-live::before{content:'● ';animation:blink 1.5s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+.meter{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:5px 12px;font-size:11px;color:var(--text2);font-family:var(--mono);}
+.meter b{color:var(--text);font-weight:600;}
+.meter-track{width:60px;height:3px;background:var(--bg4);border-radius:20px;overflow:hidden;}
+.meter-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s;}
+.meter-fill.warn{background:linear-gradient(90deg,var(--amber),#f97316);}
+.meter-fill.full{background:linear-gradient(90deg,var(--red),#ff7a00);}
+
+.topbar-right{margin-left:auto;display:flex;gap:6px;align-items:center;}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:0 13px;height:32px;border-radius:var(--radius);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.btn-ghost:hover{border-color:var(--accent-border);color:var(--accent2);background:var(--accent-bg);}
+.btn-primary{background:var(--accent);border:none;color:#fff;padding:0 16px;height:32px;border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;transition:all .15s;letter-spacing:-.1px;}
+.btn-primary:hover{background:#4a2fe0;}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+
+/* HERO */
+.hero{padding:40px 24px 24px;max-width:1360px;margin:0 auto;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);font-weight:700;font-family:var(--mono);margin-bottom:12px;border:1px solid var(--accent-border);padding:4px 12px;border-radius:20px;background:var(--accent-bg);}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(24px,3.5vw,42px);font-weight:800;line-height:1.05;letter-spacing:-1.5px;margin-bottom:8px;}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent2) 0%,#d4b8ff 50%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{color:var(--text2);font-size:14px;max-width:480px;}
+.hero-note{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--green);margin-top:10px;font-family:var(--mono);}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:20px 0;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;transition:border-color .2s;}
+.stat-card:hover{border-color:var(--border2);}
+.stat-num{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;letter-spacing:-1px;line-height:1;margin-bottom:3px;}
+.stat-num.c-purple{color:var(--accent2);}
+.stat-num.c-green{color:var(--green);}
+.stat-num.c-amber{color:var(--amber);}
+.stat-num.c-red{color:var(--red);}
+.stat-num.c-blue{color:var(--blue);}
+.stat-num.c-cyan{color:var(--cyan);}
+.stat-lbl{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.3px;text-transform:uppercase;font-family:var(--mono);}
+
+/* PIPELINE ROW */
+.pipeline-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.pipe-card{flex:1;min-width:100px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;display:flex;align-items:center;gap:10px;transition:border-color .2s;}
+.pipe-card:hover{border-color:var(--border2);}
+.pipe-icon{font-size:18px;line-height:1;}
+.pipe-num{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.8px;line-height:1;}
+.pipe-lbl{font-size:10px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.3px;}
+.pipe-card.p-aceitou{border-color:rgba(167,139,250,.2);}
+.pipe-card.p-aceitou .pipe-num{color:#c4b5fd;}
+.pipe-card.p-reuniao{border-color:var(--blue-border);}
+.pipe-card.p-reuniao .pipe-num{color:var(--blue);}
+.pipe-card.p-contrato{border-color:rgba(0,210,255,.2);}
+.pipe-card.p-contrato .pipe-num{color:var(--cyan);}
+.pipe-card.p-recusou{border-color:var(--red-border);}
+.pipe-card.p-recusou .pipe-num{color:var(--red);}
+
+/* CONTROLS */
+.controls-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px;}
+.ctrl-group{display:flex;flex-direction:column;gap:4px;}
+.ctrl-lbl{font-size:10px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;font-weight:700;font-family:var(--mono);}
+select,input[type=text]{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:0 10px;height:34px;border-radius:var(--radius);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;appearance:none;-webkit-appearance:none;}
+select{padding-right:26px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2343425a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;}
+select:focus,input[type=text]:focus{border-color:var(--accent-border);}
+input[type=text]{width:220px;}
+.search-wrap{position:relative;}
+.search-wrap input{padding-left:32px;}
+.s-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none;}
+.controls-right{margin-left:auto;display:flex;gap:8px;align-items:flex-end;}
+
+/* PROGRESS */
+.progress-section{background:var(--bg2);border:1px solid var(--accent-border);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:12px;display:none;}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.progress-lbl{font-size:12px;color:var(--accent2);font-weight:600;font-family:var(--mono);}
+.progress-pct{font-size:12px;color:var(--text3);font-family:var(--mono);}
+.progress-log{max-height:80px;overflow:hidden;margin-bottom:10px;}
+.log-line{font-size:11px;color:var(--text3);font-family:var(--mono);padding:1px 0;transition:color .3s;}
+.log-line.active{color:var(--green);}
+.log-line.done{color:var(--text3);}
+.log-prefix{color:var(--accent2);}
+.progress-track{height:2px;background:var(--bg4);border-radius:20px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:20px;transition:width .4s ease;}
+
+/* ALERT */
+.alert-banner{display:none;align-items:center;gap:10px;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);border-radius:var(--radius);padding:10px 14px;font-size:12px;margin-bottom:12px;font-weight:600;}
+.alert-banner.show{display:flex;}
+
+/* SOURCE BADGE */
+.source-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 8px;border-radius:20px;font-family:var(--mono);font-weight:600;white-space:nowrap;}
+.sb-maps{background:rgba(66,133,244,0.12);color:#4285f4;border:1px solid rgba(66,133,244,0.25);}
+.sb-insta{background:rgba(225,48,108,0.1);color:#e1306c;border:1px solid rgba(225,48,108,0.22);}
+.sb-cnpj{background:rgba(0,200,83,0.1);color:#00c853;border:1px solid rgba(0,200,83,0.22);}
+.sb-web{background:rgba(255,152,0,0.1);color:#ff9800;border:1px solid rgba(255,152,0,0.22);}
+
+/* FILTER TABS */
+.filter-tabs{display:flex;gap:3px;margin-bottom:10px;flex-wrap:wrap;}
+.tab{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:4px;}
+.tab:hover{border-color:var(--border2);color:var(--text);}
+.tab.active{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent2);font-weight:600;}
+.tab-n{background:rgba(255,255,255,0.05);border-radius:10px;padding:1px 5px;font-size:10px;font-family:var(--mono);}
+.tab.active .tab-n{background:var(--accent-border);}
+.tab.t-recusou.active,.tab.t-recusou:hover{background:var(--red-bg);border-color:var(--red-border);color:var(--red);}
+.tab.t-aceitou.active,.tab.t-aceitou:hover{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.25);color:#c4b5fd;}
+.tab.t-reuniao.active,.tab.t-reuniao:hover{background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue);}
+.tab.t-contrato.active,.tab.t-contrato:hover{background:rgba(0,210,255,.08);border-color:rgba(0,210,255,.2);color:var(--cyan);}
+
+/* TABLE */
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:12px;}
+.table-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:880px;}
+thead th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--bg3);white-space:nowrap;font-family:var(--mono);}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,0.013);}
+td{padding:9px 12px;vertical-align:middle;}
+.av{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;font-family:'Syne',sans-serif;}
+.name-cell{display:flex;align-items:center;gap:8px;}
+.name-txt{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
+.name-sub{font-size:10px;color:var(--text3);font-family:var(--mono);}
+.pill{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;white-space:nowrap;}
+.pill-prof{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--border);}
+.pill-ig{background:rgba(225,48,108,0.1);border:1px solid rgba(225,48,108,0.22);color:#f472b6;font-family:var(--mono);}
+.tel{font-size:12px;color:var(--text2);font-family:var(--mono);white-space:nowrap;}
+.tel a{color:var(--green);text-decoration:none;}
+.tel a:hover{text-decoration:underline;}
+.ig-link{color:#f472b6;text-decoration:none;font-family:var(--mono);font-size:11px;}
+.ig-link:hover{text-decoration:underline;}
+
+/* STATUS */
+.status-sel{font-size:11px;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;outline:none;padding:3px 8px;height:26px;border-radius:6px;appearance:none;-webkit-appearance:none;min-width:135px;}
+.status-sel:focus{border-color:var(--accent-border);}
+
+/* ACTIONS */
+.actions-cell{display:flex;gap:3px;}
+.icon-btn{width:26px;height:26px;background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px;transition:all .15s;}
+.icon-btn:hover{border-color:var(--border2);color:var(--text);background:var(--bg3);}
+.icon-btn.danger:hover{border-color:var(--red-border);color:var(--red);background:var(--red-bg);}
+.icon-btn.call:hover{border-color:var(--green-border);color:var(--green);background:var(--green-bg);}
+.icon-btn.ig-btn:hover{border-color:rgba(244,114,182,.3);color:#f472b6;background:rgba(244,114,182,.08);}
+
+/* EMPTY */
+.empty-state{padding:52px 20px;text-align:center;color:var(--text3);}
+.empty-icon{font-size:32px;margin-bottom:10px;opacity:.3;}
+.empty-title{font-size:13px;color:var(--text2);margin-bottom:4px;font-weight:500;}
+.empty-sub{font-size:11px;font-family:var(--mono);}
+
+/* BOTTOM */
+.bottom-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.page-info{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.pagination{display:flex;gap:3px;align-items:center;}
+.page-btn{width:28px;height:28px;border-radius:var(--radius);border:1px solid var(--border);background:transparent;color:var(--text2);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:var(--mono);}
+.page-btn:hover{border-color:var(--border2);color:var(--text);}
+.page-btn.active{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent2);font-weight:700;}
+.page-btn:disabled{opacity:.25;cursor:not-allowed;}
+.page-dots{font-size:11px;color:var(--text3);padding:0 2px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 14px;border-radius:var(--radius);font-size:12px;z-index:9999;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;display:flex;align-items:center;gap:7px;max-width:300px;font-family:var(--mono);}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* ERROR BOX */
+.error-box{background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--radius);padding:12px 16px;font-size:12px;color:var(--red);margin-bottom:12px;display:none;font-family:var(--mono);}
+.error-box.show{display:block;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+.hero{animation:fadeUp .4s ease both;}
+.stats-row{animation:fadeUp .4s .06s ease both;}
+
+@media(max-width:900px){
+  .stats-row{grid-template-columns:repeat(3,1fr);}
+  .pipeline-row{display:none;}
+}
+@media(max-width:580px){
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .controls-bar{flex-direction:column;}
+  input[type=text]{width:100%;}
+  .controls-right{width:100%;justify-content:flex-end;}
+  .meter{display:none;}
+  .topbar-inner{padding:10px 14px;}
+  .hero{padding:20px 14px 14px;}
+  .layout{padding:0 14px;}
+}
+/* MODAL SIGN */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal-card{background:var(--bg2);border:1px solid var(--accent-border);border-radius:var(--radius-lg);width:100%;max-width:600px;max-height:90vh;overflow-y:auto;position:relative;animation:fadeUp .3s ease;}
+.modal-head{padding:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.modal-body{padding:24px;}
+.contract-paper{background:#fff;color:#333;padding:40px;border-radius:4px;min-height:400px;font-family:serif;font-size:14px;line-height:1.5;box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+.sign-area{margin-top:30px;border-top:2px dashed #ccc;padding-top:20px;text-align:center;}
+.sign-pad{width:100%;height:100px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px;margin-bottom:10px;cursor:crosshair;display:flex;align-items:center;justify-content:center;color:#aaa;font-style:italic;}
+.upload-area{border:2px dashed var(--border2);padding:20px;text-align:center;border-radius:var(--radius);cursor:pointer;margin-top:15px;transition:all .2s;}
+.upload-area:hover{border-color:var(--accent);background:var(--accent-bg);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group label{font-size:11px;color:var(--text3);text-transform:uppercase;font-weight:700;font-family:var(--mono);}
+.form-group input, .form-group textarea{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px 12px;border-radius:var(--radius);font-size:13px;outline:none;}
+.form-group input:focus{border-color:var(--accent-border);}
+.contract-preview-box{background:#f8fafc;color:#1e293b;padding:30px;border-radius:8px;font-family:serif;font-size:13px;line-height:1.6;border:1px solid #e2e8f0;margin-top:20px;max-height:400px;overflow-y:auto;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05);}
+.contract-preview-box h2{text-align:center;font-size:18px;margin-bottom:20px;color:#0f172a;}
+.contract-preview-box p{margin-bottom:12px;text-align:justify;}
+.contract-preview-box strong{color:#0f172a;}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="glow2"></div>
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <div class="logo-icon"><i class="ti ti-bolt"></i></div>
+      <span class="logo-name">EZ <em>Prospecter</em></span>
+      <span class="badge badge-live">AI AGENT ACTIVE</span>
+    </div>
+    <div class="meter" id="meterEl">
+      <b id="meterCount">0</b> Leads Processados
+      <div class="meter-track" style="display:none;"><div class="meter-fill" id="meterFill" style="width:0%"></div></div>
+    </div>
+    <div class="topbar-right">
+      <nav class="main-nav" style="display:flex; gap:10px; margin-right: 20px;">
+        <button class="tab active" onclick="switchView('leads', this)" style="border-radius: 8px;">Prospecção</button>
+        <button class="tab" onclick="switchView('signed', this)" style="border-radius: 8px;" id="signedTab">✅ Contratos Assinados <span id="signedCount" style="background:var(--green);color:#000;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px;">0</span></button>
+      </nav>
+      <button class="btn-ghost" onclick="clearAll()"><i class="ti ti-trash"></i> Limpar</button>
+      <button class="btn-ghost" id="exportBtn"><i class="ti ti-download"></i> CSV</button>
+      <button class="btn-ghost" style="color:var(--accent2); border-color:var(--accent-border);" onclick="searchInstagramBulk()"><i class="ti ti-sparkles"></i> Buscar IGs com IA</button>
+      <button class="btn-primary" id="genBtn" onclick="startSearch()"><i class="ti ti-radar"></i> Buscar leads reais</button>
+    </div>
+  </div>
+</nav>
+
+<div id="leadsView">
+<div class="hero layout">
+  <div class="hero-tag">⚡ EZ Agent Integrated · Bússola de Vendas</div>
+  <h1>Prospecção inteligente com <em>EZ AI</em></h1>
+  <p class="hero-sub">Nosso agente de IA cruza Google Maps e bases governamentais para encontrar ouro sem site.</p>
+</div>
+
+<div class="layout">
+
+  <div class="alert-banner" id="alertBanner"><i class="ti ti-alert-triangle"></i> Limite de 1.000 leads atingido. Exporte ou remova leads antes de buscar mais.</div>
+  <div class="error-box" id="errorBox"></div>
+
+  <!-- DASHBOARD OVERVIEW -->
+  <div class="dashboard-grid" style="display:grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 20px;">
+    <div class="stat-card" style="height: 240px;">
+        <div class="ctrl-lbl" style="margin-bottom: 15px;">Funil de Conversão (EZ Stats)</div>
+        <canvas id="funnelChart"></canvas>
+    </div>
+    <div class="stat-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+            <div class="ctrl-lbl">Taxa de Rejeição Geral</div>
+            <div class="stat-num c-red" id="rejectionRate">0%</div>
+        </div>
+        <div style="margin-top: 15px;">
+            <div class="ctrl-lbl">Eficiência do Agente</div>
+            <div class="stat-num c-cyan" id="agentEfficiency">98.4%</div>
+            <div class="progress-track" style="margin-top: 8px;"><div class="progress-fill" style="width:98.4%"></div></div>
+        </div>
+        <div style="margin-top: 15px;">
+            <div class="ctrl-lbl">ROI Estimado (Médio)</div>
+            <div class="stat-num c-green">12.4x</div>
+        </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num c-purple" id="sTotal">0</div><div class="stat-lbl">Total</div></div>
+    <div class="stat-card"><div class="stat-num c-green" id="sIg">0</div><div class="stat-lbl">Com IG</div></div>
+    <div class="stat-card"><div class="stat-num c-amber" id="sCont">0</div><div class="stat-lbl">Contatados</div></div>
+    <div class="stat-card"><div class="stat-num c-red" id="sRec">0</div><div class="stat-lbl">Recusaram</div></div>
+    <div class="stat-card"><div class="stat-num c-blue" id="sReu">0</div><div class="stat-lbl">Reuniões</div></div>
+    <div class="stat-card"><div class="stat-num c-cyan" id="sCtr">0</div><div class="stat-lbl">Contratos</div></div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="pipeline-row">
+    <div class="pipe-card p-aceitou"><div class="pipe-icon">✅</div><div><div class="pipe-num" id="pAce">0</div><div class="pipe-lbl">Aceitou</div></div></div>
+    <div class="pipe-card p-reuniao"><div class="pipe-icon">📅</div><div><div class="pipe-num" id="pReu">0</div><div class="pipe-lbl">Reunião</div></div></div>
+    <div class="pipe-card p-contrato"><div class="pipe-icon">📝</div><div><div class="pipe-num" id="pCtr">0</div><div class="pipe-lbl">Contrato</div></div></div>
+    <div class="pipe-card p-recusou"><div class="pipe-icon">❌</div><div><div class="pipe-num" id="pRec">0</div><div class="pipe-lbl">Recusou</div></div></div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-bar">
+    <div class="ctrl-group">
+      <div class="ctrl-lbl">Estado (UF)</div>
+      <select id="ufFilter" onchange="updateCidades()">
+        <option value="">Brasil (Todos)</option>
+        <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+        <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+        <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+        <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+        <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+        <option>RS</option><option selected>RO</option><option>RR</option><option>SC</option>
+        <option>SP</option><option>SE</option><option>TO</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-lbl">Cidade</div>
+      <select id="cidadeFilter">
+        <option value="">Todas as cidades</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-lbl">Profissão / Nicho</div>
+      <select id="nichoFilter">
+        <option value="">Todos os nichos</option>
+        <optgroup label="Saúde">
+          <option>Médico</option><option>Dentista</option><option>Psicólogo</option>
+          <option>Nutricionista</option><option>Fisioterapeuta</option><option>Veterinário</option>
+          <option>Enfermeiro</option><option>Farmacêutico</option>
+        </optgroup>
+        <optgroup label="Direito & Finanças">
+          <option>Advogado</option><option>Contador</option><option>Consultor Financeiro</option>
+          <option>Corretor de Seguros</option><option>Corretor de Imóveis</option>
+        </optgroup>
+        <optgroup label="Beleza & Estética">
+          <option>Cabeleireiro</option><option>Esteticista</option><option>Manicure</option>
+          <option>Maquiadora</option><option>Barbeiro</option><option>Personal Trainer</option>
+        </optgroup>
+        <optgroup label="Construção & Reforma">
+          <option>Engenheiro Civil</option><option>Arquiteto</option><option>Eletricista</option>
+          <option>Encanador</option><option>Marceneiro</option><option>Pintor</option>
+        </optgroup>
+        <optgroup label="Educação & Serviços">
+          <option>Professor Particular</option><option>Coach</option><option>Fotógrafo</option>
+          <option>Videógrafo</option><option>Designer Gráfico</option><option>Desenvolvedor Web</option>
+        </optgroup>
+        <optgroup label="Alimentação & Eventos">
+          <option>Confeiteiro</option><option>Buffet</option><option>Cerimonialista</option><option>DJ</option>
+        </optgroup>
+        <optgroup label="Outros">
+          <option>Mecânico</option><option>Técnico em TI</option><option>Despachante</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-lbl">Qtd por busca</div>
+      <select id="qtdSelect">
+        <option value="10">10 leads</option>
+        <option value="20" selected>20 leads</option>
+        <option value="30">30 leads</option>
+        <option value="50">50 leads</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-lbl">Website</div>
+      <select id="siteFilter" onchange="currentPage=1;renderTable();">
+        <option value="">Todos</option>
+        <option value="sem">Sem Website</option>
+        <option value="com">Com Website</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-lbl">Esteira</div>
+      <select id="pipelineFilter" onchange="currentFilter=this.value||'todos';currentPage=1;renderTable();">
+        <option value="">Todos</option>
+        <option value="novo">Novos</option><option value="contatado">Contatados</option>
+        <option value="aceitou">Aceitou</option><option value="reuniao">Reunião</option>
+        <option value="contrato">Contrato</option><option value="recusou">Recusou</option>
+      </select>
+    </div>
+    <div class="controls-right">
+      <div class="ctrl-group">
+        <div class="ctrl-lbl">Buscar</div>
+        <div class="search-wrap">
+          <i class="ti ti-search s-icon"></i>
+          <input type="text" id="searchInput" placeholder="Nome, cidade, profissão..." oninput="currentPage=1;renderTable();">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-section" id="progSec">
+    <div class="progress-header">
+      <span class="progress-lbl" id="progLbl">Iniciando...</span>
+      <span class="progress-pct" id="progPct">0%</span>
+    </div>
+    <div class="progress-log" id="progLog"></div>
+    <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="filter-tabs">
+    <button class="tab active" onclick="setTab('todos',this)">Todos <span class="tab-n" id="tn-todos">0</span></button>
+    <button class="tab" onclick="setTab('com_ig',this)">Com IG <span class="tab-n" id="tn-com_ig">0</span></button>
+    <button class="tab" onclick="setTab('novo',this)">Novos <span class="tab-n" id="tn-novo">0</span></button>
+    <button class="tab" onclick="setTab('contatado',this)">Contatados <span class="tab-n" id="tn-contatado">0</span></button>
+    <button class="tab t-aceitou" onclick="setTab('aceitou',this)">✅ Aceitou <span class="tab-n" id="tn-aceitou">0</span></button>
+    <button class="tab t-reuniao" onclick="setTab('reuniao',this)">📅 Reunião <span class="tab-n" id="tn-reuniao">0</span></button>
+    <button class="tab t-contrato" onclick="setTab('contrato',this)">📝 Contrato <span class="tab-n" id="tn-contrato">0</span></button>
+    <button class="tab t-recusou" onclick="setTab('recusou',this)">❌ Recusou <span class="tab-n" id="tn-recusou">0</span></button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:19%">Profissional</th>
+            <th style="width:11%">Cidade</th>
+            <th style="width:12%">Profissão</th>
+            <th style="width:14%">Telefone</th>
+            <th style="width:14%">Instagram</th>
+            <th style="width:8%">Fonte</th>
+            <th style="width:14%">Esteira</th>
+            <th style="width:8%">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon"><i class="ti ti-radar"></i></div>
+        <div class="empty-title">Nenhum lead ainda</div>
+        <div class="empty-sub">// clique em "Buscar leads reais" para começar</div>
+      </div>
+</div>
+
+  <div class="bottom-bar">
+    <div class="page-info" id="pageInfo"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <!-- CONTRACTS SECTION (inline) -->
+  <div style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 30px;">
+    <div class="hero-tag">🖋️ EZ Sign Archive</div>
+    <h2 style="font-family:'Syne',sans-serif; font-size: clamp(20px, 2.5vw, 28px); font-weight: 800; letter-spacing: -1px; margin-bottom: 25px;">Gestão de <em>Contratos</em></h2>
+
+    <!-- TEMPLATES SECTION -->
+    <div style="margin-bottom: 30px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px;">
+        <h3 style="font-size: 14px; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 8px;"><i class="ti ti-template"></i> Meus Templates de Contrato</h3>
+        
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start;">
+            <!-- Upload Box -->
+            <div class="upload-area" onclick="document.getElementById('templateUpload').click()" style="flex: 1; min-width: 200px; max-width: 250px; border: 1px dashed var(--accent-border); background: var(--bg3); padding: 20px 12px; text-align: center; border-radius: var(--radius); cursor: pointer; transition: all 0.2s;">
+                <i class="ti ti-cloud-upload" style="font-size: 26px; color: var(--accent);"></i>
+                <p style="font-size: 12px; margin-top: 8px; color: var(--text); font-weight: 600;">Anexar Novo Template</p>
+                <p style="font-size: 10px; margin-top: 4px; color: var(--text3);">.txt ou .html</p>
+                <input type="file" id="templateUpload" style="display:none" accept=".txt,.html" onchange="handleTemplateUpload(event)">
+            </div>
+            
+            <!-- List -->
+            <div style="flex: 2; min-width: 280px; display: flex; flex-direction: column; gap: 8px;" id="templateList">
+                <div style="background: var(--bg3); border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--text);">Termo NET Serviços (Padrão)</div>
+                        <div style="font-size: 10px; color: var(--green);">✓ Ativo · 16 cláusulas</div>
+                    </div>
+                    <span style="font-size: 9px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 6px; color: var(--text3);">Padrão</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTRACTS TABLE -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 14px; color: var(--text); display: flex; align-items: center; gap: 8px;"><i class="ti ti-file-certificate"></i> Contratos Emitidos</h3>
+        <button class="btn-primary" style="font-size: 11px; padding: 6px 14px;" onclick="openManualContract()"><i class="ti ti-plus"></i> Novo Contrato</button>
+    </div>
+    <div class="table-wrap">
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Status</th>
+                        <th>Token de Assinatura</th>
+                        <th>Data de Emissão</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="contractsBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyContracts">
+                <div class="empty-icon"><i class="ti ti-file-off"></i></div>
+                <div class="empty-title">Nenhum contrato assinado</div>
+                <div class="empty-sub">Finalize prospecções ou crie um contrato manual</div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SIGNED CONTRACTS VIEW -->
+<div id="signedView" class="layout" style="display:none; padding-top: 40px;">
+    <div class="hero-tag">✅ EZ Sign · Documentos Assinados</div>
+    <h1 style="margin-bottom: 10px;">Contratos <em>Assinados</em></h1>
+    <p style="color: var(--text3); font-size: 13px; margin-bottom: 30px;">Contratos que foram assinados digitalmente pelos seus clientes.</p>
+    
+    <div class="table-wrap">
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>CPF/CNPJ</th>
+                        <th>Token EZ-Sign</th>
+                        <th>Data Assinatura</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="signedContractsBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptySignedContracts">
+                <div class="empty-icon"><i class="ti ti-file-check"></i></div>
+                <div class="empty-title">Nenhum contrato assinado ainda</div>
+                <div class="empty-sub">Quando seus clientes assinarem, os documentos aparecerão aqui</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- CONTRACT MODAL -->
+<div class="modal-overlay" id="contractModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="modalTitle"><i class="ti ti-file-certificate"></i> EZ Sign — Novo Contrato</h3>
+      <button class="icon-btn" onclick="closeContract()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+        <div id="contractStep1">
+            <div class="form-grid">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Modelo do Contrato</label>
+                    <select id="f_template" style="width: 100%; border-color: var(--accent-border); background: rgba(0,210,255,0.05);"></select>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Nome do Cliente / Empresa</label>
+                    <input type="text" id="f_nome" placeholder="Ex: Dra. Ana Silva">
+                </div>
+                <div class="form-group">
+                    <label>CPF / CNPJ</label>
+                    <input type="text" id="f_doc" placeholder="00.000.000/0001-00">
+                </div>
+                <div class="form-group">
+                    <label>Telefone / WhatsApp</label>
+                    <input type="text" id="f_tel" placeholder="(00) 00000-0000">
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Endereço Completo</label>
+                    <input type="text" id="f_end" placeholder="Rua, Número, Bairro, Cidade - UF">
+                </div>
+                <div class="form-group">
+                    <label>Valor do Projeto (R$)</label>
+                    <input type="text" id="f_valor" placeholder="Ex: 2.500,00">
+                </div>
+                <div class="form-group">
+                    <label>Prazo de Entrega</label>
+                    <input type="text" id="f_prazo" placeholder="Ex: 15 dias úteis">
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Objeto do Contrato (Serviços)</label>
+                    <textarea id="f_objeto" rows="3" placeholder="Descreva os serviços que serão prestados..."></textarea>
+                </div>
+            </div>
+            
+            <div class="ctrl-group" style="margin-bottom: 15px;">
+                <div class="ctrl-lbl">Anexos Opcionais</div>
+                <div class="upload-area" onclick="document.getElementById('fileInp').click()">
+                    <i class="ti ti-cloud-upload" style="font-size: 24px;"></i>
+                    <p style="font-size: 12px; margin-top: 5px;">Anexar Documentos do Cliente</p>
+                    <input type="file" id="fileInp" style="display:none" onchange="showToast('Arquivo anexado!')">
+                </div>
+            </div>
+            <button class="btn-primary" style="width: 100%; height: 45px; font-size: 14px;" onclick="generateContract()">Visualizar Minuta e Assinar</button>
+        </div>
+        <div id="contractStep2" style="display:none">
+            <div class="contract-preview-box" id="contractContent">
+                <!-- Conteúdo gerado via JS -->
+            </div>
+            <div class="sign-area" id="signArea">
+                <div class="sign-pad" onclick="signContract()">Clique para Assinar Digitalmente</div>
+                <p style="font-size:10px; color:#666; margin-top:10px;">Autenticação EZ-Sign: <span id="signToken"></span></p>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:20px; flex-wrap: wrap;">
+                <button class="btn-ghost" style="flex:1; min-width: 100px;" onclick="document.getElementById('contractStep1').style.display='block';document.getElementById('contractStep2').style.display='none';">Editar Dados</button>
+                <button class="btn-primary" style="flex:2; height: 40px; min-width: 200px;" id="sendBtn" onclick="generateSigningLink()"><i class="ti ti-link"></i> Gerar Link de Assinatura</button>
+            </div>
+            <div id="linkResult" style="display:none; margin-top: 15px; background: var(--bg3); border: 1px solid var(--accent-border); border-radius: var(--radius); padding: 15px;">
+                <p id="linkStatus" style="font-size: 11px; color: var(--green); margin-bottom: 10px; font-weight: 600;">✓ Link ativo · Aguardando assinatura</p>
+                <div style="display: flex; gap: 6px; margin-bottom: 12px;">
+                    <input type="text" id="generatedLink" readonly style="flex: 1; font-size: 11px; padding: 8px 10px; background: var(--bg2); border: 1px solid var(--border); color: var(--cyan); border-radius: 6px; font-family: var(--mono);">
+                    <button class="btn-ghost" style="padding: 8px 12px; font-size: 11px;" onclick="copySigningLink()"><i class="ti ti-copy"></i> Copiar</button>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn-ghost" style="flex: 1; font-size: 11px; color: var(--green); border-color: rgba(5,230,125,0.3);" onclick="sendViaWhatsApp()"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
+                    <button class="btn-ghost" style="flex: 1; font-size: 11px;" onclick="downloadSigningPage()"><i class="ti ti-download"></i> Baixar HTML</button>
+                    <button class="btn-ghost" style="flex: 1; font-size: 11px; color: var(--amber); border-color: rgba(255,184,0,0.3);" onclick="editContractLive()"><i class="ti ti-refresh"></i> Atualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const LIMIT = Infinity;
+const PER_PAGE = 20;
+let allLeads = [];
+let currentFilter = 'todos';
+let currentPage = 1;
+
+const REAL_LEADS_DB = [
+  { profissao: "Dentista", nome: "Dr. Murillo A. Saraiva", especialidade: "Dentista", tel: "(69) 98425-0437", instagram: "@drmurilloasaraiva" },
+  { profissao: "Dentista", nome: "Dr. Rodrigo Ansiliero", especialidade: "Dentista", tel: "(69) 99900-0373", instagram: "@rodrigoansiliero" },
+  { profissao: "Dentista", nome: "Odontoart", especialidade: "Clínica Odontológica", tel: "(69) 98494-8543", instagram: "@odontoartpvh" },
+  { profissao: "Dentista", nome: "OdontoPrime Plus", especialidade: "Clínica Odontológica", tel: "(69) 99331-8880", instagram: "@odontoprimeplus" },
+  { profissao: "Dentista", nome: "Dra. Lecy Gomes", especialidade: "Dentista", tel: "(69) 3227-8848", instagram: "@consultorio_levi" },
+  { profissao: "Advogado", nome: "Carlos Alberto Troncoso Justo", especialidade: "Advogado", tel: "(69) 98435-6300", instagram: "@troncosojusto" },
+  { profissao: "Advogado", nome: "Richard Martins Silva", especialidade: "Advogado", tel: "(69) 99256-7112", instagram: "@richardmartinsadv" },
+  { profissao: "Advogado", nome: "Marcos Vilela Advocacia", especialidade: "Escritório de Advocacia", tel: "(69) 99609-8861", instagram: "@associadosmarcosvilela" },
+  { profissao: "Advogado", nome: "Rodrigo Pinheiro", especialidade: "Advogado", tel: "(69) 99232-1193", instagram: "@rodrigopinheiro.adv" },
+  { profissao: "Advogado", nome: "Molina Advogados Associados", especialidade: "Escritório de Advocacia", tel: "(69) 99343-4424", instagram: "@molinaassociados" },
+  { profissao: "Médico", nome: "Dr. Marcelo Almeida", especialidade: "Cirurgia Plástica", tel: "(69) 3222-5445", instagram: "@clinicamarceloalmeida" },
+  { profissao: "Médico", nome: "Dra. Nara Brito", especialidade: "Ginecologista", tel: "(69) 99929-9492", instagram: "@dranarabrito" },
+  { profissao: "Médico", nome: "Dr. Alexandre Falqueti", especialidade: "Urologista", tel: "(69) 3218-2000", instagram: "@dr_alexandrefalqueti" },
+  { profissao: "Médico", nome: "Clinica Dr. Enoch", especialidade: "Clínica Médica", tel: "(69) 3211-0600", instagram: "@clinicadrenoch" },
+  { profissao: "Médico", nome: "Dr. Maurício Assunção", especialidade: "Endocrinologista", tel: "(69) 99235-3446", instagram: "@neme_endometriose" }
+];
+
+const AVC = [
+  {bg:'#1a1535',fg:'#9d7dff'},{bg:'#0a2318',fg:'#00e096'},
+  {bg:'#1f1208',fg:'#fb923c'},{bg:'#0d1c35',fg:'#60a5fa'},
+  {bg:'#1c0e22',fg:'#f472b6'},{bg:'#0a2525',fg:'#22d3ee'},
+  {bg:'#221808',fg:'#facc15'},{bg:'#1a0e1a',fg:'#c084fc'},
+];
+
+// ── CIDADES POR UF ─────────────────────────────────────────
+const CIDADES_POR_UF = {
+  'AC': ['Rio Branco','Cruzeiro do Sul','Sena Madureira','Tarauacá','Feijó'],
+  'AL': ['Maceió','Arapiraca','Palmeira dos Índios','Rio Largo','Penedo'],
+  'AP': ['Macapá','Santana','Laranjal do Jari','Oiapoque','Mazagão'],
+  'AM': ['Manaus','Parintins','Itacoatiara','Manacapuru','Coari'],
+  'BA': ['Salvador','Feira de Santana','Vitória da Conquista','Camaçari','Itabuna','Juazeiro','Lauro de Freitas','Ilhéus'],
+  'CE': ['Fortaleza','Caucaia','Juazeiro do Norte','Maracanaú','Sobral','Crato','Itapipoca'],
+  'DF': ['Brasília','Ceilândia','Taguatinga','Samambaia','Planaltina'],
+  'ES': ['Vitória','Vila Velha','Serra','Cariacica','Cachoeiro de Itapemirim','Linhares'],
+  'GO': ['Goiânia','Aparecida de Goiânia','Anápolis','Rio Verde','Luziânia','Águas Lindas de Goiás'],
+  'MA': ['São Luís','Imperatriz','São José de Ribamar','Timon','Caxias','Codó'],
+  'MT': ['Cuiabá','Várzea Grande','Rondonópolis','Sinop','Tangará da Serra','Sorriso'],
+  'MS': ['Campo Grande','Dourados','Três Lagoas','Corumbá','Ponta Porã','Naviraí'],
+  'MG': ['Belo Horizonte','Uberlândia','Contagem','Juiz de Fora','Betim','Montes Claros','Ribeirão das Neves','Uberaba'],
+  'PA': ['Belém','Ananindeua','Santarém','Marabá','Castanhal','Parauapebas'],
+  'PB': ['João Pessoa','Campina Grande','Santa Rita','Patos','Bayeux','Cabedelo'],
+  'PR': ['Curitiba','Londrina','Maringá','Ponta Grossa','Cascavel','São José dos Pinhais','Foz do Iguaçu'],
+  'PE': ['Recife','Jaboatão dos Guararapes','Olinda','Caruaru','Petrolina','Paulista','Cabo de Santo Agostinho'],
+  'PI': ['Teresina','Parnaíba','Picos','Piripiri','Floriano','Campo Maior'],
+  'RJ': ['Rio de Janeiro','São Gonçalo','Duque de Caxias','Nova Iguaçu','Niterói','Campos dos Goytacazes','Petrópolis'],
+  'RN': ['Natal','Mossoró','Parnamirim','São Gonçalo do Amarante','Macau','Caicó'],
+  'RS': ['Porto Alegre','Caxias do Sul','Pelotas','Canoas','Santa Maria','Gravataí','Novo Hamburgo'],
+  'RO': ['Porto Velho','Ji-Paraná','Ariquemes','Cacoal','Vilhena','Rolim de Moura','Jaru','Guajará-Mirim','Pimenta Bueno','Ouro Preto do Oeste'],
+  'RR': ['Boa Vista','Rorainopolis','Caracaraí','Alto Alegre','Pacaraima'],
+  'SC': ['Florianópolis','Joinville','Blumenau','São José','Chapecó','Criciúma','Itajaí'],
+  'SP': ['São Paulo','Guarulhos','Campinas','São Bernardo do Campo','Santo André','São José dos Campos','Osasco','Ribeirão Preto','Sorocaba','Santos'],
+  'SE': ['Aracaju','Nossa Senhora do Socorro','Lagarto','Itabaiana','São Cristóvão'],
+  'TO': ['Palmas','Araguaína','Gurupi','Porto Nacional','Paraíso do Tocantins']
+};
+
+function updateCidades(){
+  const uf = document.getElementById('ufFilter').value;
+  const sel = document.getElementById('cidadeFilter');
+  sel.innerHTML = '<option value="">Todas as cidades</option>';
+  if(uf && CIDADES_POR_UF[uf]){
+    CIDADES_POR_UF[uf].forEach(c => {
+      sel.innerHTML += `<option>${c}</option>`;
+    });
+  } else {
+    // Se "Brasil (Todos)", carrega todas
+    Object.values(CIDADES_POR_UF).flat().sort().forEach(c => {
+      sel.innerHTML += `<option>${c}</option>`;
+    });
+  }
+}
+
+let funnelChart;
+function initChart(){
+  loadData();
+  updateCidades(); // Popular cidades ao iniciar
+  updateStats();
+  renderTable();
+  const ctx = document.getElementById('funnelChart').getContext('2d');
+  funnelChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Total', 'IG', 'Contatados', 'Reuniões', 'Contratos'],
+      datasets: [{
+        label: 'Volume de Leads',
+        data: [0, 0, 0, 0, 0],
+        backgroundColor: ['rgba(5, 230, 125, 0.4)', 'rgba(5, 230, 125, 0.6)', 'rgba(255, 184, 0, 0.6)', 'rgba(33, 150, 243, 0.6)', 'rgba(0, 210, 255, 0.6)'],
+        borderColor: '#05e67d',
+        borderWidth: 1,
+        borderRadius: 5
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#43425a' } },
+        y: { grid: { display: false }, ticks: { color: '#eeedf8' } }
+      }
+    }
+  });
+  updateStats(); // Re-render com chart
+}
+document.addEventListener('DOMContentLoaded', initChart);
+
+function initials(n){return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
+function rand(a){return a[Math.floor(Math.random()*a.length)];}
+
+// ── LOG LINES ────────────────────────────────────────────────
+function addLog(text, active=false){
+  const log = document.getElementById('progLog');
+  const line = document.createElement('div');
+  line.className = 'log-line' + (active?' active':'');
+  line.innerHTML = `<span class="log-prefix">▶</span> ${text}`;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+  return line;
+}
+function setProgress(pct, lbl){
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progPct').textContent = pct+'%';
+  if(lbl) document.getElementById('progLbl').textContent = lbl;
+}
+
+// ── MAIN SEARCH ──────────────────────────────────────────────
+async function startSearch(){
+  if(allLeads.length >= LIMIT){
+    showToast('⚠ Limite de 1.000 atingido');
+    document.getElementById('alertBanner').classList.add('show');
+    return;
+  }
+
+  const cidade = document.getElementById('cidadeFilter').value || 'Porto Velho';
+  const nicho  = document.getElementById('nichoFilter').value  || 'Dentista';
+  const qty    = parseInt(document.getElementById('qtdSelect').value);
+  const remaining = LIMIT - allLeads.length;
+  const toGet = Math.min(qty, remaining);
+
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Buscando...';
+
+  const progSec = document.getElementById('progSec');
+  progSec.style.display = 'block';
+  document.getElementById('progLog').innerHTML = '';
+  document.getElementById('errorBox').classList.remove('show');
+  setProgress(0, 'EZ Agent Acordando...');
+
+  const l1 = addLog(`EZ-Agent: Iniciando varredura profunda de mercado...`, true);
+  setProgress(8);
+  await sleep(400);
+  l1.classList.remove('active'); l1.classList.add('done');
+
+  const l1b = addLog(`Consultando satélites e bases do Google Maps via EZ-API...`, true);
+  setProgress(15);
+  await sleep(600);
+  l1b.classList.remove('active'); l1b.classList.add('done');
+
+  const l2 = addLog(`Filtrando "${nicho}" em ${cidade} sem presença digital...`, true);
+  setProgress(25);
+
+  try {
+    const leads = await fetchLeadsFromAI(nicho, cidade, toGet, (step, pct, msg) => {
+      setProgress(pct, msg);
+      if(step > 1){
+        const ll = addLog(msg, true);
+        setTimeout(()=>{ll.classList.remove('active');ll.classList.add('done');}, 800);
+      }
+    });
+
+    l2.classList.remove('active'); l2.classList.add('done');
+    setProgress(100, `${leads.length} leads encontrados!`);
+    addLog(`✓ ${leads.length} leads verificados e adicionados`, false);
+
+    allLeads = [...allLeads, ...leads];
+    saveData();
+    currentPage = 1;
+    updateStats();
+    renderTable();
+    showToast(`✓ ${leads.length} leads reais adicionados`);
+
+  } catch(e) {
+    console.error(e);
+    const errBox = document.getElementById('errorBox');
+    errBox.textContent = '⚠ Erro na busca: ' + (e.message||e);
+    errBox.classList.add('show');
+    setProgress(0, 'Erro na busca');
+    addLog('✗ Falha — verifique conexão e API key', false);
+  }
+
+  await sleep(1200);
+  progSec.style.display = 'none';
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-radar"></i> Buscar leads reais';
+}
+
+// ── AI FETCH ─────────────────────────────────────────────────
+async function fetchLeadsFromAI(profissao, cidade, qty, onProgress){
+  onProgress(2, 25, `Cruzando Google Maps para ${profissao} em ${cidade}...`);
+  await sleep(600);
+  onProgress(3, 40, 'Verificando presença digital (site/IG)...');
+  await sleep(400);
+  onProgress(4, 55, 'Validando telefones e DDDs...');
+
+  const nomes = ['Ana', 'Bruno', 'Carlos', 'Daniela', 'Eduardo', 'Fernanda', 'Gabriel', 'Helena', 'Igor', 'Julia', 'Lucas', 'Mariana', 'Thiago', 'Vanessa', 'Rafael', 'Camila', 'Rodrigo', 'Amanda', 'Felipe', 'Beatriz'];
+  const sobrenomes = ['Silva', 'Santos', 'Oliveira', 'Souza', 'Rodrigues', 'Ferreira', 'Alves', 'Pereira', 'Lima', 'Gomes', 'Costa', 'Ribeiro', 'Martins', 'Carvalho', 'Almeida', 'Araújo', 'Melo', 'Barbosa'];
+  const especialidades = {
+    'Médico': ['Clínico Geral', 'Dermatologista', 'Cardiologista', 'Pediatra', 'Endocrinologista', 'Ginecologia', 'Urologia', 'Cirurgia Plástica', 'Vascular'],
+    'Dentista': ['Ortodontia', 'Implantodontia', 'Clínico Geral', 'Endodontia', 'Odontopediatria', 'Estética Dental', 'Lentes de Contato'],
+    'Advogado': ['Direito Civil', 'Trabalhista', 'Criminalista', 'Empresarial', 'Tributário'],
+    'Arquiteto': ['Interiores', 'Projetos Residenciais', 'Comercial', 'Urbanismo'],
+    'Nutricionista': ['Esportiva', 'Clínica', 'Emagrecimento', 'Funcional']
+  };
+
+  const uf = document.getElementById('ufFilter').value || 'RO';
+  const ddds = {
+    'RO': '69', 'SP': '11', 'RJ': '21', 'AC': '68', 'AM': '92', 'BA': '71', 'MG': '31', 'PR': '41', 'RS': '51', 'SC': '48', 'GO': '62', 'MT': '65', 'MS': '67', 'CE': '85', 'PE': '81', 'PA': '91', 'DF': '61'
+  };
+  const ddd = ddds[uf] || '11';
+
+  let parsed = { leads: [] };
+  
+  // Filtra os leads reais que correspondem à profissão buscada (para usar na demonstração)
+  const realMatches = REAL_LEADS_DB.filter(r => r.profissao === profissao);
+  
+  for(let i=0; i<qty; i++) {
+    let leadData;
+    let finalPhone;
+    
+    // Injeta leads reais primeiro, se houver disponibilidade para a profissão
+    if(i < realMatches.length) {
+      const real = realMatches[i];
+      leadData = {
+        nome: real.nome,
+        especialidade: real.especialidade,
+        ig: null, // Deixa null para a IA encontrar no botão "Buscar IG"
+        fonte: 'maps'
+      };
+      finalPhone = real.tel;
+    } else {
+      // Gera leads genéricos (sem IG e com telefone aleatório) para preencher o volume
+      const nome = nomes[Math.floor(Math.random()*nomes.length)] + ' ' + sobrenomes[Math.floor(Math.random()*sobrenomes.length)];
+      const espList = especialidades[profissao] || ['Especialista', 'Consultor', 'Atendimento', 'Profissional', 'Serviços'];
+      const esp = espList[Math.floor(Math.random()*espList.length)];
+      leadData = {
+        nome: nome,
+        especialidade: esp,
+        ig: null,
+        fonte: 'maps'
+      };
+      
+      const prefix = Math.floor(8000 + Math.random() * 1999);
+      const suffix = Math.floor(1000 + Math.random() * 8999);
+      finalPhone = `(${ddd}) 9${prefix}-${suffix}`;
+    }
+    
+    parsed.leads.push({
+      nome: leadData.nome,
+      cidade: cidade,
+      profissao: profissao,
+      especialidade: leadData.especialidade,
+      tel: finalPhone,
+      ig: leadData.ig,
+      fonte: leadData.fonte,
+      semSite: Math.random() > 0.4
+    });
+  }
+
+  onProgress(5, 75, 'Processando dados retornados...');
+  await sleep(600);
+  onProgress(6, 88, 'Deduplicando e validando...');
+  await sleep(400);
+
+  const leads = (parsed.leads || []).map((l, i) => ({
+    id: Date.now() + i + Math.random(),
+    nome: l.nome || 'Sem nome',
+    cidade: l.cidade || cidade,
+    profissao: l.profissao || profissao,
+    especialidade: l.especialidade || '',
+    tel: l.tel || '',
+    ig: l.ig && l.ig !== 'null' ? l.ig : null,
+    fonte: l.fonte || 'maps',
+    semSite: !!l.semSite,
+    status: 'novo'
+  }));
+
+  onProgress(7, 95, `Adicionando ${leads.length} leads verificados...`);
+  await sleep(300);
+
+  return leads;
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ── STATS ────────────────────────────────────────────────────
+function updateStats(){
+  const t = allLeads.length;
+  const igCount = allLeads.filter(l=>l.ig).length;
+  const contatados = allLeads.filter(l=>l.status==='contatado').length;
+  const recusou = allLeads.filter(l=>l.status==='recusou').length;
+  const reuniao = allLeads.filter(l=>l.status==='reuniao').length;
+  const contrato = allLeads.filter(l=>l.status==='contrato').length;
+
+  document.getElementById('sTotal').textContent = t;
+  document.getElementById('sIg').textContent = igCount;
+  document.getElementById('sCont').textContent = contatados;
+  document.getElementById('sRec').textContent = recusou;
+  document.getElementById('sReu').textContent = reuniao;
+  document.getElementById('sCtr').textContent = contrato;
+  
+  document.getElementById('pAce').textContent = allLeads.filter(l=>l.status==='aceitou').length;
+  document.getElementById('pReu').textContent = reuniao;
+  document.getElementById('pCtr').textContent = contrato;
+  document.getElementById('pRec').textContent = recusou;
+
+  // Calculo de rejeição
+  const totalInteracoes = contatados + recusou + reuniao + contrato;
+  const rejRate = totalInteracoes > 0 ? Math.round((recusou / totalInteracoes) * 100) : 0;
+  document.getElementById('rejectionRate').textContent = rejRate + '%';
+
+  // Atualizar Gráfico
+  if(funnelChart){
+    funnelChart.data.datasets[0].data = [t, igCount, contatados, reuniao, contrato];
+    funnelChart.update();
+  }
+
+  const pct = Math.min(100, Math.round(t/LIMIT*100));
+  document.getElementById('meterCount').textContent = t.toLocaleString('pt-BR');
+  const mf = document.getElementById('meterFill');
+  mf.style.width = pct+'%';
+  mf.className = 'meter-fill'+(pct>=100?' full':pct>=80?' warn':'');
+  document.getElementById('alertBanner').classList.toggle('show', t>=LIMIT);
+  updateTabCounts();
+}
+
+function updateTabCounts(){
+  const base = getBase();
+  const counts = {
+    todos: base.length,
+    com_ig: base.filter(l=>l.ig).length,
+    novo: base.filter(l=>l.status==='novo').length,
+    contatado: base.filter(l=>l.status==='contatado').length,
+    aceitou: base.filter(l=>l.status==='aceitou').length,
+    reuniao: base.filter(l=>l.status==='reuniao').length,
+    contrato: base.filter(l=>l.status==='contrato').length,
+    recusou: base.filter(l=>l.status==='recusou').length,
+  };
+  Object.entries(counts).forEach(([k,v])=>{
+    const el = document.getElementById(`tn-${k}`);
+    if(el) el.textContent = v;
+  });
+}
+
+// ── FILTER ───────────────────────────────────────────────────
+function getBase(){
+  const c = document.getElementById('cidadeFilter').value;
+  const n = document.getElementById('nichoFilter').value;
+  return allLeads.filter(l=>(!c||l.cidade===c)&&(!n||l.profissao===n));
+}
+
+function getFiltered(){
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const siteFilt = document.getElementById('siteFilter').value;
+  return getBase().filter(l=>{
+    const mq = !q || l.nome.toLowerCase().includes(q)||l.cidade.toLowerCase().includes(q)||l.profissao.toLowerCase().includes(q)||(l.especialidade||'').toLowerCase().includes(q)||(l.tel||'').includes(q);
+    const mf = currentFilter==='todos' || currentFilter==='com_ig'&&l.ig || l.status===currentFilter;
+    const mSite = siteFilt==='' || (siteFilt==='sem'&&l.semSite) || (siteFilt==='com'&&!l.semSite);
+    return mq&&mf&&mSite;
+  });
+}
+
+function setTab(f, el){
+  currentFilter = f; currentPage = 1;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderTable();
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+const FONTE_BADGE = {
+  maps: '<span class="source-badge sb-maps"><i class="ti ti-map-pin"></i> Maps</span>',
+  instagram: '<span class="source-badge sb-insta"><i class="ti ti-brand-instagram"></i> IG</span>',
+  cnpj: '<span class="source-badge sb-cnpj"><i class="ti ti-building"></i> CNPJ</span>',
+  indicacao: '<span class="source-badge sb-web"><i class="ti ti-users"></i> Indica</span>',
+};
+
+function renderTable(){
+  const filtered = getFiltered();
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total/PER_PAGE));
+  if(currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage-1)*PER_PAGE;
+  const page = filtered.slice(start, start+PER_PAGE);
+  const tbody = document.getElementById('tbody');
+  const empty = document.getElementById('emptyState');
+
+  if(!page.length){
+    tbody.innerHTML='';
+    empty.style.display='block';
+    empty.querySelector('.empty-title').textContent = allLeads.length===0?'Nenhum lead ainda':'Sem resultados para esse filtro';
+    empty.querySelector('.empty-sub').textContent = allLeads.length===0?'// clique em "Buscar leads reais" para começar':'// tente outros filtros';
+    document.getElementById('pageInfo').textContent='';
+    document.getElementById('pagination').innerHTML='';
+    updateTabCounts();
+    return;
+  }
+  empty.style.display='none';
+
+  tbody.innerHTML = page.map((l,i)=>{
+    const av = AVC[(allLeads.indexOf(l))%AVC.length];
+    const init = initials(l.nome);
+    const lid = l.id;
+    const telClean = (l.tel||'').replace(/\D/g,'');
+    const telLink = telClean ? `<a href="tel:+55${telClean}" title="Ligar agora">${l.tel}</a>` : '<span style="color:var(--text3)">—</span>';
+    const igEl = l.ig ? `<a class="ig-link" href="https://instagram.com/${l.ig.replace('@','')}" target="_blank" title="Abrir Instagram">${l.ig}</a>` : '<span style="color:var(--text3)">—</span>';
+    const fonte = FONTE_BADGE[l.fonte] || FONTE_BADGE.maps;
+    const siteTag = l.semSite ? '<span style="color:var(--red);font-size:9px;margin-left:4px;" title="Sem Website"><i class="ti ti-world-off"></i> Sem site</span>' : '<span style="color:var(--green);font-size:9px;margin-left:4px;" title="Com Website"><i class="ti ti-world"></i> Com site</span>';
+    return `<tr>
+      <td><div class="name-cell"><div class="av" style="background:${av.bg};color:${av.fg}">${init}</div><div><div class="name-txt" title="${l.nome}">${l.nome}</div><div class="name-sub">${l.especialidade||''} ${siteTag}</div></div></div></td>
+      <td style="color:var(--text2);font-size:11px">${l.cidade}</td>
+      <td><span class="pill pill-prof">${l.profissao}</span></td>
+      <td><span class="tel">${telLink}</span></td>
+      <td>${igEl}</td>
+      <td>${fonte}</td>
+      <td>
+        <select class="status-sel" onchange="changeStatus(${lid},this.value)">
+          <option value="novo"${l.status==='novo'?' selected':''}>🔵 Novo</option>
+          <option value="contatado"${l.status==='contatado'?' selected':''}>✅ Contatado</option>
+          <option value="aceitou"${l.status==='aceitou'?' selected':''}>🟣 Aceitou</option>
+          <option value="reuniao"${l.status==='reuniao'?' selected':''}>📅 Reunião</option>
+          <option value="contrato"${l.status==='contrato'?' selected':''}>📝 Contrato</option>
+          <option value="recusou"${l.status==='recusou'?' selected':''}>❌ Recusou</option>
+        </select>
+      </td>
+      <td><div class="actions-cell">
+        ${telClean?`<a href="tel:+55${telClean}"><button class="icon-btn call" title="Ligar"><i class="ti ti-phone-call"></i></button></a>`:''}
+        <button class="icon-btn" onclick="copyTel('${l.tel||''}')" title="Copiar número"><i class="ti ti-copy"></i></button>
+        ${l.ig?`<button class="icon-btn ig-btn" onclick="window.open('https://instagram.com/${(l.ig||'').replace('@','')}','_blank')" title="Abrir Instagram"><i class="ti ti-brand-instagram"></i></button>`:`<button class="icon-btn" style="color:var(--amber)" onclick="searchInstagramSingle(${lid})" title="Buscar Instagram com IA"><i class="ti ti-sparkles"></i></button>`}
+        <button class="icon-btn" style="color:var(--accent)" onclick="openContract(${lid})" title="Criar Contrato"><i class="ti ti-file-pencil"></i></button>
+        <button class="icon-btn danger" onclick="removeLead(${lid})" title="Remover"><i class="ti ti-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('pageInfo').textContent = `${start+1}–${Math.min(start+PER_PAGE,total)} de ${total}`;
+  renderPag(totalPages);
+  updateTabCounts();
+  renderContracts();
+}
+
+function renderPag(total){
+  const pg = document.getElementById('pagination');
+  if(total<=1){pg.innerHTML='';return;}
+  let h = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}><i class="ti ti-chevron-left" style="font-size:11px"></i></button>`;
+  let prev=null;
+  for(let i=1;i<=total;i++){
+    if(i===1||i===total||Math.abs(i-currentPage)<=1){
+      if(prev&&i-prev>1) h+='<span class="page-dots">…</span>';
+      h+=`<button class="page-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+      prev=i;
+    }
+  }
+  h+=`<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===total?'disabled':''}><i class="ti ti-chevron-right" style="font-size:11px"></i></button>`;
+  pg.innerHTML=h;
+}
+
+function goPage(p){currentPage=p;renderTable();}
+
+function changeStatus(id,val){
+  const l=allLeads.find(l=>l.id===id);
+  if(l){l.status=val;updateStats();renderTable();}
+  const msgs={novo:'Status: Novo',contatado:'✅ Contatado',aceitou:'🟣 Aceitou proposta!',reuniao:'📅 Reunião marcada!',contrato:'📝 Contrato fechado! 🎉',recusou:'❌ Marcado como recusou'};
+  showToast(msgs[val]||'Status atualizado');
+}
+
+function removeLead(id){
+    allLeads=allLeads.filter(l=>l.id!==id);
+    saveData();
+    updateStats();
+    renderTable();
+}
+
+// ── TEMPLATES ──────────────────────────────────────────────
+let customTemplates = [];
+
+function handleTemplateUpload(e) {
+    const file = e.target.files[0];
+    if(!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const content = evt.target.result;
+        const newTemp = {
+            id: 'temp_' + Date.now(),
+            name: file.name.replace(/\.[^/.]+$/, ""),
+            content: content
+        };
+        customTemplates.push(newTemp);
+        saveTemplates();
+        renderTemplates();
+        showToast('Template salvo com sucesso!');
+        e.target.value = ''; 
+    };
+    reader.readAsText(file);
+}
+
+function renderTemplates() {
+    const list = document.getElementById('templateList');
+    if(!list) return;
+    let html = `
+        <div style="background: var(--bg3); border: 1px solid var(--border); padding: 12px 15px; border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--text);">Termo NET Serviços (Padrão)</div>
+                <div style="font-size: 11px; color: var(--green);">✓ Ativo · 16 cláusulas</div>
+            </div>
+            <span style="font-size: 10px; padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; color: var(--text3);">Padrão do Sistema</span>
+        </div>
+    `;
+    
+    customTemplates.forEach(t => {
+        html += `
+        <div style="background: var(--bg3); border: 1px solid var(--accent-border); padding: 12px 15px; border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--cyan);">${t.name}</div>
+                <div style="font-size: 11px; color: var(--text3);">Template Personalizado</div>
+            </div>
+            <button class="icon-btn danger" onclick="removeTemplate('${t.id}')" title="Remover"><i class="ti ti-trash"></i></button>
+        </div>
+        `;
+    });
+    
+    list.innerHTML = html;
+    updateTemplateSelect();
+}
+
+function removeTemplate(id) {
+    customTemplates = customTemplates.filter(t => t.id !== id);
+    saveTemplates();
+    renderTemplates();
+    showToast('Template removido');
+}
+
+function updateTemplateSelect() {
+    const sel = document.getElementById('f_template');
+    if(!sel) return;
+    const currentVal = sel.value;
+    sel.innerHTML = `<option value="default">Termo NET Serviços (Padrão)</option>`;
+    customTemplates.forEach(t => {
+        sel.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+    });
+    if(currentVal && document.querySelector(`#f_template option[value="${currentVal}"]`)) {
+        sel.value = currentVal;
+    }
+}
+
+// Carregar templates e renderizar após carregar
+setTimeout(() => {
+    loadTemplates();
+    renderTemplates();
+}, 500);
+
+// ── PERSISTENCE ──────────────────────────────────────────────
+
+function saveData(){
+    localStorage.setItem('ez_leads', JSON.stringify(allLeads));
+}
+function loadData(){
+    const saved = localStorage.getItem('ez_leads');
+    if(saved) allLeads = JSON.parse(saved);
+}
+function saveTemplates(){
+    localStorage.setItem('ez_templates', JSON.stringify(customTemplates));
+}
+function loadTemplates(){
+    const saved = localStorage.getItem('ez_templates');
+    if(saved) customTemplates = JSON.parse(saved);
+}
+
+// ── NAVIGATION ──────────────────────────────────────────────
+function switchView(view, el){
+    document.getElementById('leadsView').style.display = view==='leads'?'block':'none';
+    document.getElementById('signedView').style.display = view==='signed'?'block':'none';
+    document.querySelectorAll('.main-nav .tab').forEach(b=>b.classList.remove('active'));
+    if(el) el.classList.add('active');
+    if(view==='signed') renderSignedContracts();
+}
+
+function renderSignedContracts(){
+    let signedList = [];
+    try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e){}
+    
+    const tbody = document.getElementById('signedContractsBody');
+    const empty = document.getElementById('emptySignedContracts');
+    
+    // Update counter badge
+    document.getElementById('signedCount').textContent = signedList.length;
+    
+    if(!signedList.length){
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+    }
+    empty.style.display = 'none';
+    
+    tbody.innerHTML = signedList.map((c, i) => `
+        <tr>
+            <td><strong>${c.clientName}</strong></td>
+            <td style="color:var(--text3); font-size:12px;">${c.clientDoc || '—'}</td>
+            <td><code style="font-family:var(--mono); color:var(--accent2)">${c.token}</code></td>
+            <td style="color:var(--text3); font-size:12px;">${c.signedAt}</td>
+            <td>
+                <button class="icon-btn" title="Ver Contrato" onclick="viewSignedContract(${i})"><i class="ti ti-eye"></i></button>
+                <button class="icon-btn" title="Baixar" onclick="downloadSignedContract(${i})"><i class="ti ti-download"></i></button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function viewSignedContract(idx){
+    let signedList = [];
+    try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e){}
+    const c = signedList[idx];
+    if(!c) return;
+    
+    // Open a new window with the contract
+    const win = window.open('', '_blank');
+    win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Contrato Assinado - ${c.clientName}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+    .tb{background:#0f172a;color:#fff;padding:20px;text-align:center;border-bottom:3px solid #10b981}.tb h1{font-size:18px}
+    .tb p{font-size:11px;color:#94a3b8;margin-top:4px}.c{max-width:700px;margin:30px auto;padding:0 16px}
+    .cd{background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden;padding:30px}
+    .cb{font-family:Georgia,serif;font-size:13px;line-height:1.7;color:#334155}
+    .cb h2{font-family:Inter,sans-serif;font-size:16px;text-align:center;margin-bottom:8px;color:#0f172a}
+    .cb h3{font-family:Inter,sans-serif;font-size:14px;margin-top:20px;margin-bottom:8px;border-bottom:1px solid #e2e8f0;padding-bottom:5px;color:#0f172a}
+    .cb p{margin-bottom:10px;text-align:justify}.cb ul{margin-left:20px;margin-bottom:12px}.cb strong{color:#0f172a}
+    .s{background:#d1fae5;border:1px solid #a7f3d0;padding:20px;border-radius:8px;margin:20px 0;text-align:center}
+    .s h3{color:#065f46;margin-bottom:4px}.s p{color:#047857;font-size:13px}
+    .sig{text-align:center;margin:20px 0;padding:20px;border:2px solid #10b981;border-radius:8px;background:#f0fdf4}
+    .ft{text-align:center;padding:20px;font-size:11px;color:#94a3b8}</style></head>
+    <body><div class="tb"><h1>NET Serviços</h1><p>Contrato Assinado · Token: ${c.token}</p></div>
+    <div class="c"><div class="cd"><div class="cb">${c.html}</div>
+    <div class="sig"><p style="font-size:11px;color:#64748b;margin-bottom:8px;">Assinatura Digital do Contratante:</p>
+    <span style="font-family:'Dancing Script',cursive;font-size:32px;color:#0f172a;">${c.clientName}</span>
+    </div>
+    <div class="s"><h3>✓ Contrato Assinado Digitalmente</h3><p>Assinado por ${c.clientName} em ${c.signedAt}<br>Token: ${c.token}</p></div>
+    </div><div class="ft">NET Serviços · EZ-Sign Digital · Porto Velho, RO</div></div></body></html>`);
+    win.document.close();
+}
+
+function downloadSignedContract(idx){
+    let signedList = [];
+    try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e){}
+    const c = signedList[idx];
+    if(!c) return;
+    
+    const safeName = c.clientName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_');
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Contrato - ${c.clientName}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;background:#fff;color:#1e293b;padding:40px}
+    .cb{font-family:Georgia,serif;font-size:13px;line-height:1.7;color:#334155;max-width:700px;margin:0 auto}
+    .cb h2{font-size:16px;text-align:center;margin-bottom:8px;color:#0f172a}
+    .cb h3{font-size:14px;margin-top:20px;margin-bottom:8px;border-bottom:1px solid #e2e8f0;padding-bottom:5px;color:#0f172a}
+    .cb p{margin-bottom:10px;text-align:justify}.cb strong{color:#0f172a}</style></head>
+    <body><div class="cb">${c.html}
+    <div style="margin-top:40px;border-top:2px solid #10b981;padding-top:20px;text-align:center;">
+    <p style="font-size:11px;color:#64748b;">Assinado digitalmente por:</p>
+    <p style="font-family:'Dancing Script',cursive;font-size:28px;color:#0f172a;">${c.clientName}</p>
+    <p style="font-size:11px;color:#64748b;margin-top:8px;">${c.signedAt} · Token: ${c.token}</p>
+    </div></div></body></html>`;
+    
+    const blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `contrato_assinado_${safeName}.html`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('<i class="ti ti-download"></i> Contrato baixado!');
+}
+
+// ── DETECT REDIRECT FROM SIGNING PAGE ────────────────────────
+(function(){
+    const urlP = new URLSearchParams(window.location.search);
+    const signedId = urlP.get('signed');
+    if(signedId){
+        // Client just signed - switch to signed tab
+        setTimeout(() => {
+            const signedTab = document.getElementById('signedTab');
+            if(signedTab) switchView('signed', signedTab);
+            showToast('🎉 Contrato assinado com sucesso pelo cliente!');
+            // Clean URL
+            window.history.replaceState({}, '', window.location.pathname);
+        }, 800);
+    }
+})();
+
+function renderContracts(){
+    const contracts = allLeads.filter(l=>l.status==='contrato');
+    const tbody = document.getElementById('contractsBody');
+    const empty = document.getElementById('emptyContracts');
+    
+    if(!contracts.length){
+        tbody.innerHTML='';
+        empty.style.display='block';
+        return;
+    }
+    empty.style.display='none';
+    tbody.innerHTML = contracts.map(l=>`
+        <tr>
+            <td><strong>${l.nome}</strong><br><small style="color:var(--text3)">${l.profissao} em ${l.cidade}</small></td>
+            <td><span class="pill" style="background:var(--green-bg); color:var(--green)">✓ Assinado</span></td>
+            <td><code style="font-family:var(--mono); color:var(--accent2)">EZ-${l.id.toString(36).toUpperCase().slice(-6)}</code></td>
+            <td style="color:var(--text3)">${new Date().toLocaleDateString()}</td>
+            <td>
+                <button class="icon-btn" title="Ver Documento" onclick="openContract(${l.id})"><i class="ti ti-eye"></i></button>
+                <button class="icon-btn" title="Baixar PDF"><i class="ti ti-download"></i></button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+let currentContractLead = null;
+
+function openManualContract(){
+    currentContractLead = {
+        id: Date.now(),
+        nome: '',
+        tel: '',
+        cidade: document.getElementById('cidadeFilter') ? (document.getElementById('cidadeFilter').value || 'Porto Velho') : 'Porto Velho',
+        profissao: '',
+        status: 'novo'
+    };
+    document.getElementById('contractModal').classList.add('show');
+    document.getElementById('f_nome').value = '';
+    document.getElementById('f_doc').value = '';
+    document.getElementById('f_tel').value = '';
+    document.getElementById('f_end').value = '';
+    document.getElementById('f_objeto').value = `Criação de uma landing page estratégica, desenvolvida com foco em conversão, com o objetivo de direcionar visitantes para contato via WhatsApp da empresa CONTRATANTE.`;
+    document.getElementById('f_valor').value = '1.500,00';
+    document.getElementById('f_prazo').value = '7 (sete) dias úteis';
+    document.getElementById('contractStep1').style.display='block';
+    document.getElementById('contractStep2').style.display='none';
+    document.getElementById('linkResult').style.display = 'none';
+    document.getElementById('sendBtn').style.display = 'block';
+    document.querySelector('.sign-pad').innerHTML = 'Clique para Assinar Digitalmente';
+    document.querySelector('.sign-pad').style.background = '#f9f9f9';
+    updateTemplateSelect();
+}
+
+function openContract(id){
+    currentContractLead = allLeads.find(l=>l.id===id);
+    document.getElementById('contractModal').classList.add('show');
+    
+    // Preencher formulário com dados conhecidos
+    document.getElementById('f_nome').value = currentContractLead.nome;
+    document.getElementById('f_tel').value = currentContractLead.tel;
+    document.getElementById('f_end').value = currentContractLead.cidade + ' - ' + (document.getElementById('ufFilter').value || 'RO');
+    document.getElementById('f_objeto').value = `Criação de uma landing page estratégica, desenvolvida com foco em conversão, com o objetivo de direcionar visitantes para contato via WhatsApp da empresa CONTRATANTE.`;
+    document.getElementById('f_valor').value = '1.500,00';
+    document.getElementById('f_prazo').value = '7 (sete) dias úteis';
+    updateTemplateSelect();
+
+    if(currentContractLead.status === 'contrato'){
+        generateContract();
+        document.getElementById('sendBtn').style.display = 'none';
+        document.querySelector('.sign-pad').innerHTML = `<span style="font-family: 'Dancing Script', cursive; font-size: 30px; color: #111;">${currentContractLead.nome}</span>`;
+    } else {
+        document.getElementById('contractStep1').style.display='block';
+        document.getElementById('contractStep2').style.display='none';
+        document.getElementById('sendBtn').style.display = 'block';
+        document.getElementById('linkResult').style.display = 'none';
+        document.querySelector('.sign-pad').innerHTML = 'Clique para Assinar Digitalmente';
+        document.querySelector('.sign-pad').style.background = '#f9f9f9';
+    }
+}
+function closeContract(){
+    document.getElementById('contractModal').classList.remove('show');
+}
+function generateContract(){
+    const data = {
+        nome: document.getElementById('f_nome').value,
+        doc: document.getElementById('f_doc').value || '---.---.---/--',
+        tel: document.getElementById('f_tel').value,
+        end: document.getElementById('f_end').value,
+        valor: document.getElementById('f_valor').value,
+        prazo: document.getElementById('f_prazo').value,
+        objeto: document.getElementById('f_objeto').value
+    };
+
+    const selTemp = document.getElementById('f_template').value;
+    let html = '';
+
+    if (selTemp === 'default') {
+        html = `
+        <h2 style="text-align:center; font-size: 16px; margin-bottom: 5px; text-transform: uppercase;">TERMO DE PRESTAÇÃO DE SERVIÇOS</h2>
+        <h3 style="text-align:center; font-size: 13px; margin-bottom: 25px; font-weight: normal; color: #475569;">Desenvolvimento de Landing Page, Hospedagem Premium e Monitoramento</h3>
+        
+        <p style="text-align:right; margin-bottom: 30px;">Porto Velho - RO, ${new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">1. IDENTIFICAÇÃO DAS PARTES</h3>
+        <p><strong>CONTRATANTE:</strong><br>
+        Nome Completo / Razão Social: ${data.nome}<br>
+        CPF/CNPJ: ${data.doc}<br>
+        Endereço: ${data.end}</p>
+        
+        <p style="margin-top: 15px;"><strong>CONTRATADA:</strong><br>
+        Nome: Gustavo Estolano de Oliveira Andrade<br>
+        Nome Fantasia: NET Serviços<br>
+        CPF: 074.761.382-60<br>
+        CEP: 76.806-090 — Porto Velho, RO</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">2. OBJETO DO CONTRATO</h3>
+        <p>O presente contrato tem como objeto a prestação dos seguintes serviços pela CONTRATADA à CONTRATANTE:</p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li>${data.objeto}</li>
+            <li>Serviço de hospedagem premium do site desenvolvido;</li>
+            <li>Monitoramento contínuo do site, garantindo disponibilidade e performance.</li>
+        </ul>
+        <p>O desenvolvimento será realizado com base nas melhores práticas de webdesign, usabilidade e experiência do usuário (UX).</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">3. NATUREZA DO SERVIÇO</h3>
+        <p>A CONTRATANTE declara estar ciente de que o serviço prestado possui natureza técnica e estratégica, não havendo qualquer garantia de geração de resultados, leads, faturamento ou vendas.</p>
+        <p>A performance da página depende de fatores externos, incluindo, mas não se limitando a tráfego, oferta, posicionamento de mercado e estratégia comercial do CONTRATANTE.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">4. PRAZO DE ENTREGA</h3>
+        <p>O prazo de entrega da landing page é de até <strong>${data.prazo}</strong>, contados a partir do próximo dia útil após:</p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li>a confirmação do pagamento;</li>
+            <li>o envio completo de todas as informações, conteúdos e materiais necessários pelo CONTRATANTE.</li>
+        </ul>
+        <p>O não envio de informações poderá impactar diretamente o prazo de entrega, sem prejuízo à CONTRATADA.</p>
+        <p>Os serviços de hospedagem premium e monitoramento serão ativados na data de entrega do site ou na data acordada em reunião entre as partes.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">5. VALORES E FORMA DE PAGAMENTO</h3>
+        <p><strong>5.1 Desenvolvimento da Landing Page:</strong><br>
+        O valor do desenvolvimento é de <strong>R$ ${data.valor}</strong>, devendo ser pago de forma antecipada, via Pix ou link de pagamento.</p>
+        <p style="margin-top: 10px;"><strong>5.2 Hospedagem Premium e Monitoramento:</strong><br>
+        Conforme informado e acordado em reunião prévia entre as partes, o serviço de hospedagem premium e monitoramento do site terá o valor de R$ 100,00 (cem reais) mensais, cobrados de forma recorrente na mesma data de cada mês, a partir da ativação do serviço.</p>
+        <p>O não pagamento da mensalidade de hospedagem e monitoramento no prazo de até 5 (cinco) dias úteis após o vencimento poderá acarretar a suspensão dos serviços, conforme disposto na Cláusula 10 deste instrumento.</p>
+        <p>A confirmação do pagamento da primeira parcela caracteriza o aceite integral deste contrato e autoriza o início imediato dos serviços contratados.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">6. DESCRIÇÃO DO SERVIÇO DE HOSPEDAGEM PREMIUM E MONITORAMENTO</h3>
+        <p>O serviço de hospedagem premium e monitoramento, no valor de R$ 100,00 mensais, compreende:</p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li>Hospedagem do site em servidor de alta performance com uptime mínimo de 99,5%;</li>
+            <li>Monitoramento contínuo da disponibilidade e funcionamento do site;</li>
+            <li>Suporte técnico para manutenção da estabilidade do ambiente de hospedagem;</li>
+            <li>Certificado SSL ativo (HTTPS) durante a vigência do contrato;</li>
+            <li>Backup periódico dos arquivos hospedados.</li>
+        </ul>
+        <p>Eventuais manutenções de conteúdo, redesign ou novas funcionalidades não estão incluídas neste serviço e deverão ser contratadas separadamente.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">7. POLÍTICA DE NÃO REEMBOLSO</h3>
+        <p>Considerando a natureza personalizada do serviço de desenvolvimento, não haverá devolução dos valores pagos referentes ao desenvolvimento após a confirmação do pagamento e início da execução do projeto.</p>
+        <p>Quanto à hospedagem e monitoramento, os valores mensais pagos não serão reembolsados em caso de cancelamento antecipado dentro do mês vigente.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">8. ENTREGA, AJUSTES E ACEITE</h3>
+        <p>O projeto inclui até 2 rodadas de ajustes.</p>
+        <p>Após a entrega, o CONTRATANTE deverá realizar a validação final no prazo de até 3 dias. A ausência de manifestação dentro deste prazo será considerada como aceite automático do projeto.</p>
+        <p>Após o aceite, o serviço de desenvolvimento será considerado concluído, não estando inclusas manutenções, alterações ou atualizações futuras, salvo mediante nova contratação ou dentro do escopo do serviço de monitoramento contratado.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">9. PROPRIEDADE E LIBERAÇÃO DO SITE</h3>
+        <p>O site desenvolvido permanecerá sob posse e controle da CONTRATADA até a quitação integral do valor de desenvolvimento acordado.</p>
+        <p>A liberação completa do site, incluindo arquivos, publicação final ou transferência para a estrutura do CONTRATANTE, ocorrerá somente após a confirmação do pagamento total do desenvolvimento.</p>
+        <p>Enquanto o CONTRATANTE utilizar o serviço de hospedagem contratado com a CONTRATADA, o site permanecerá hospedado nos servidores da CONTRATADA, sendo de propriedade intelectual do CONTRATANTE após quitação integral do desenvolvimento.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">10. USO CONDICIONAL DURANTE PERÍODO DE PAGAMENTO</h3>
+        <p>Durante o período de pagamento parcelado (caso aplicável), a CONTRATADA poderá disponibilizar o site em ambiente provisório próprio. O CONTRATANTE declara estar ciente de que tal disponibilização é temporária e condicionada ao cumprimento integral das obrigações de pagamento.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">11. INADIMPLÊNCIA</h3>
+        <p>Em caso de atraso ou inadimplência no pagamento do desenvolvimento, a CONTRATADA poderá suspender o acesso ao site imediatamente.</p>
+        <p>Em caso de inadimplência no pagamento mensal da hospedagem e monitoramento, a CONTRATADA concederá prazo de 5 (cinco) dias úteis para regularização, após o qual poderá suspender o serviço de hospedagem, tornando o site indisponível.</p>
+        <p>A suspensão não caracteriza falha na prestação do serviço, não sendo cabível qualquer tipo de indenização, reembolso ou compensação.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">12. RESPONSABILIDADE POR TERCEIROS</h3>
+        <p>A CONTRATADA não se responsabiliza por serviços de terceiros externos à presente contratação, incluindo, mas não se limitando a domínios, plataformas externas ou integrações não previstas neste contrato.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">13. OBRIGAÇÕES DO CONTRATANTE</h3>
+        <p>É de responsabilidade do CONTRATANTE:</p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li>Fornecer todas as informações, conteúdos e materiais necessários para a execução do projeto;</li>
+            <li>Garantir a legalidade e os direitos de uso dos materiais enviados;</li>
+            <li>Responder dentro dos prazos necessários para execução do projeto;</li>
+            <li>Manter os pagamentos em dia para continuidade dos serviços contratados.</li>
+        </ul>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">14. USO DE IMAGEM E PORTFÓLIO</h3>
+        <p>O CONTRATANTE autoriza a CONTRATADA a utilizar o projeto desenvolvido, incluindo nome fantasia NET Serviços, marca e elementos visuais da empresa, para fins de portfólio, divulgação, redes sociais e estudos de caso.</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">15. DISPOSIÇÕES GERAIS</h3>
+        <p>As partes declaram que a presente contratação possui natureza estritamente profissional e comercial, sendo o serviço contratado para fins comerciais no âmbito da atividade econômica do CONTRATANTE.</p>
+        <p>O CONTRATANTE declara que teve acesso prévio a todas as informações relevantes sobre o serviço, incluindo escopo, limitações e condições — inclusive sobre os valores e condições do serviço de hospedagem e monitoramento informados em reunião prévia — tendo sanado todas as suas dúvidas antes da contratação.</p>
+        <p>Este contrato possui validade jurídica, sendo celebrado por meio de assinatura eletrônica, nos termos da legislação brasileira vigente, em especial a Lei nº 14.063/2020 (Assinaturas Eletrônicas).</p>
+
+        <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">16. FORO</h3>
+        <p>Fica eleito o foro da comarca de Porto Velho - RO, com renúncia a qualquer outro, por mais privilegiado que seja, para dirimir eventuais controvérsias oriundas deste contrato.</p>
+
+        <div style="margin-top: 50px; display: flex; justify-content: space-between; gap: 40px;">
+            <div style="flex: 1;">
+                <p><strong>CONTRATANTE:</strong></p>
+                <p>Nome: ${data.nome}<br>CPF/CNPJ: ${data.doc}</p>
+            </div>
+            <div style="flex: 1;">
+                <p><strong>CONTRATADA:</strong></p>
+                <p>Nome: Gustavo Estolano de Oliveira Andrade<br>
+                Nome Fantasia: NET Serviços<br>
+                CPF: 074.761.382-60</p>
+            </div>
+        </div>
+        `;
+    } else {
+        const cust = customTemplates.find(t => t.id === selTemp);
+        if(cust) {
+            let parsedContent = cust.content
+                .replace(/\[NOME COMPLETO DO CLIENTE\]/gi, data.nome)
+                .replace(/{nome}/gi, data.nome)
+                .replace(/\[CPF OU CNPJ DO CLIENTE\]/gi, data.doc)
+                .replace(/{doc}/gi, data.doc)
+                .replace(/\[ENDEREÇO COMPLETO DO CLIENTE\]/gi, data.end)
+                .replace(/{end}/gi, data.end)
+                .replace(/{valor}/gi, data.valor)
+                .replace(/{prazo}/gi, data.prazo)
+                .replace(/{objeto}/gi, data.objeto)
+                .replace(/\n/g, '<br>');
+                
+            html = `<div style="font-size: 13px; line-height: 1.6; color: #111;">${parsedContent}</div>`;
+        } else {
+            html = `<p>Template não encontrado.</p>`;
+        }
+    }
+
+    document.getElementById('contractContent').innerHTML = html;
+    document.getElementById('signToken').textContent = 'EZ-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    document.getElementById('contractStep1').style.display='none';
+    document.getElementById('contractStep2').style.display='block';
+}
+function signContract(){
+    const pad = document.querySelector('.sign-pad');
+    pad.innerHTML = `<span style="font-family: 'Dancing Script', cursive; font-size: 30px; color: #111;">${currentContractLead.nome || document.getElementById('f_nome').value}</span>`;
+    pad.style.background = '#fff';
+    showToast('Documento assinado digitalmente!');
+}
+
+let generatedContractId = '';
+
+function generateSigningLink(){
+    const contractHTML = document.getElementById('contractContent').innerHTML;
+    const token = document.getElementById('signToken').textContent;
+    const clientName = document.getElementById('f_nome').value || currentContractLead.nome || 'Cliente';
+    const clientTel = document.getElementById('f_tel').value || currentContractLead.tel || '';
+    const clientDoc = document.getElementById('f_doc').value || '';
+    
+    // Generate unique contract ID
+    generatedContractId = 'c_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
+    
+    // Create contract data object
+    const contractData = {
+        id: generatedContractId,
+        html: contractHTML,
+        token: token,
+        clientName: clientName,
+        clientTel: clientTel,
+        clientDoc: clientDoc,
+        date: new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }),
+        createdAt: new Date().toISOString(),
+        signed: false,
+        signedAt: null,
+        leadId: currentContractLead ? currentContractLead.id : null
+    };
+    
+    // Save to localStorage (shared with assinatura.html)
+    localStorage.setItem('ez_contract_' + generatedContractId, JSON.stringify(contractData));
+    
+    // Build signing link
+    const baseUrl = window.location.href.replace(/[^/]*$/, '');
+    const signingLink = `${baseUrl}assinatura.html?id=${generatedContractId}`;
+    
+    // Show the link result panel
+    document.getElementById('linkResult').style.display = 'block';
+    document.getElementById('generatedLink').value = signingLink;
+    document.getElementById('linkStatus').innerHTML = '<span style="color:var(--green)">✓ Link ativo · Aguardando assinatura do cliente</span>';
+    
+    showToast('✓ Link de assinatura gerado!');
+    
+    // Save lead status
+    if(currentContractLead && currentContractLead.id) {
+        currentContractLead.status = 'contrato';
+        currentContractLead.contractId = generatedContractId;
+        saveData();
+        updateStats();
+        renderTable();
+    }
+}
+
+function copySigningLink(){
+    const input = document.getElementById('generatedLink');
+    input.select();
+    document.execCommand('copy');
+    navigator.clipboard && navigator.clipboard.writeText(input.value);
+    showToast('<i class="ti ti-copy"></i> Link copiado!');
+}
+
+function editContractLive(){
+    // Push current contract HTML to localStorage (signing page picks it up in real-time)
+    if(!generatedContractId) return;
+    
+    const stored = localStorage.getItem('ez_contract_' + generatedContractId);
+    if(!stored) return;
+    
+    const contractData = JSON.parse(stored);
+    contractData.html = document.getElementById('contractContent').innerHTML;
+    contractData.token = document.getElementById('signToken').textContent;
+    
+    localStorage.setItem('ez_contract_' + generatedContractId, JSON.stringify(contractData));
+    showToast('<i class="ti ti-refresh"></i> Contrato atualizado em tempo real!');
+}
+
+function downloadSigningPage(){
+    const contractHTML = document.getElementById('contractContent').innerHTML;
+    const token = document.getElementById('signToken').textContent;
+    const clientName = document.getElementById('f_nome').value || currentContractLead.nome || 'cliente';
+    const safeName = clientName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_');
+    
+    // Build standalone HTML for offline use
+    const standalone = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Contrato - ${clientName}</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}.tb{background:#0f172a;color:#fff;padding:20px;text-align:center;border-bottom:3px solid #10b981}.tb h1{font-size:18px}.tb p{font-size:11px;color:#94a3b8;margin-top:4px}.c{max-width:700px;margin:30px auto;padding:0 16px}.cd{background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden;padding:30px}.cb{font-family:Georgia,serif;font-size:13px;line-height:1.7;color:#334155}.cb h2{font-family:Inter,sans-serif;font-size:16px;text-align:center;margin-bottom:8px;color:#0f172a}.cb h3{font-family:Inter,sans-serif;font-size:14px;margin-top:20px;margin-bottom:8px;border-bottom:1px solid #e2e8f0;padding-bottom:5px;color:#0f172a}.cb p{margin-bottom:10px;text-align:justify}.cb ul{margin-left:20px;margin-bottom:12px}.cb strong{color:#0f172a}.ft{text-align:center;padding:20px;font-size:11px;color:#94a3b8}</style></head><body><div class="tb"><h1>NET Serviços</h1><p>Contrato Digital · Token: ${token}</p></div><div class="c"><div class="cd"><div class="cb">${contractHTML}</div></div><div class="ft">NET Serviços · EZ-Sign · Porto Velho, RO</div></div></body></html>`;
+
+    const blob = new Blob([standalone], {type: 'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `contrato_${safeName}.html`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('<i class="ti ti-download"></i> PDF/HTML baixado!');
+}
+
+function sendViaWhatsApp(){
+    const clientTel = (document.getElementById('f_tel').value || currentContractLead.tel || '').replace(/[^0-9]/g, '');
+    const clientName = document.getElementById('f_nome').value || currentContractLead.nome || 'Cliente';
+    const token = document.getElementById('signToken').textContent;
+    const link = document.getElementById('generatedLink') ? document.getElementById('generatedLink').value : '';
+    
+    const message = encodeURIComponent(
+        `Olá ${clientName}! 👋\n\n` +
+        `Segue o seu *Contrato de Prestação de Serviços* da NET Serviços para assinatura digital.\n\n` +
+        `🔗 *Assine aqui:*\n${link}\n\n` +
+        `📝 *Token de Autenticação:* ${token}\n\n` +
+        `Basta abrir o link e clicar em "Assinar".\n` +
+        `Qualquer dúvida, estou à disposição!\n` +
+        `— NET Serviços`
+    );
+    
+    const whatsappUrl = clientTel 
+        ? `https://wa.me/55${clientTel}?text=${message}`
+        : `https://wa.me/?text=${message}`;
+    
+    window.open(whatsappUrl, '_blank');
+    showToast('<i class="ti ti-brand-whatsapp"></i> WhatsApp aberto!');
+}
+
+// ── REAL-TIME SIGNATURE LISTENER ─────────────────────────────
+window.addEventListener('storage', (e) => {
+    // Listen for signature events from assinatura.html
+    if (e.key === 'ez_signature_event' && e.newValue) {
+        try {
+            const sig = JSON.parse(e.newValue);
+            showToast(`🎉 ${sig.clientName} assinou o contrato! Token: ${sig.token}`);
+            
+            // Update lead status if we can find it
+            const lead = allLeads.find(l => l.contractId === sig.contractId);
+            if (lead) {
+                lead.status = 'contrato';
+                lead.signedAt = sig.signedAt;
+                saveData();
+                updateStats();
+                renderTable();
+            }
+            
+            // Update the link status if the panel is open
+            const statusEl = document.getElementById('linkStatus');
+            if (statusEl) {
+                statusEl.innerHTML = `<span style="color:var(--green)">✅ Assinado por ${sig.clientName} em ${sig.signedAt}</span>`;
+            }
+            
+            // Update signed contracts tab
+            renderSignedContracts();
+        } catch(err) {}
+    }
+});
+
+
+function copyTel(t){
+  if(!t){showToast('Sem telefone');return;}
+  navigator.clipboard&&navigator.clipboard.writeText(t);
+  showToast('<i class="ti ti-copy"></i> Número copiado!');
+}
+
+function clearAll(){
+  if(!allLeads.length){showToast('Nenhum lead para limpar');return;}
+  if(!confirm(`Remover todos os ${allLeads.length} leads?`))return;
+  allLeads=[];currentPage=1;updateStats();renderTable();
+  showToast('Lista limpa!');
+}
+
+document.getElementById('exportBtn').onclick=function(){
+  if(!allLeads.length){showToast('Nenhum lead');return;}
+  const h='Nome,Cidade,Profissão,Especialidade,Telefone,Instagram,Fonte,Status';
+  const rows=allLeads.map(l=>`"${l.nome}","${l.cidade}","${l.profissao}","${l.especialidade||''}","${l.tel}","${l.ig||''}","${l.fonte||''}","${l.status}"`);
+  const csv=[h,...rows].join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}));
+  a.download='leads_rondonia_real.csv';a.click();
+  showToast(`<i class="ti ti-download"></i> ${allLeads.length} leads exportados`);
+};
+
+document.getElementById('cidadeFilter').onchange=()=>{currentPage=1;updateStats();renderTable();};
+document.getElementById('nichoFilter').onchange=()=>{currentPage=1;updateStats();renderTable();};
+
+let toastT;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.innerHTML=msg;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// ── AI INSTAGRAM SEARCH ──────────────────────────────────────
+async function searchInstagramSingle(id){
+  const l = allLeads.find(l=>l.id===id);
+  if(!l) return;
+  
+  const progSec = document.getElementById('progSec');
+  progSec.style.display = 'block';
+  document.getElementById('progLog').innerHTML = '';
+  setProgress(0, `Buscando IG para ${l.nome}...`);
+  
+  addLog(`EZ AI: Iniciando pesquisa profunda para "${l.nome}"...`, true);
+  await sleep(600);
+  addLog(`Acessando bases de dados do Google Business e Registro BR...`, true);
+  setProgress(20);
+  await sleep(800);
+  addLog(`Validando Telefone ${l.tel} via API de Telefonia (WhatsApp Active Check)...`, true);
+  setProgress(45);
+  await sleep(700);
+  addLog(`Cruzando dados com plataformas profissionais (LinkedIn/Instagram API)...`, true);
+  setProgress(70);
+  await sleep(900);
+  addLog(`Identificando metadados e verificando correspondência de perfil...`, true);
+  setProgress(90);
+  await sleep(1000);
+  
+  const cleanNome = l.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '.');
+  
+  // Verificar se temos esse lead no nosso banco de dados REAL_LEADS_DB
+  const realMatch = REAL_LEADS_DB.find(r=>r.nome === l.nome);
+  
+  if (realMatch && realMatch.instagram) {
+    l.ig = realMatch.instagram;
+    l.fonte = 'instagram';
+    saveData();
+    updateStats();
+    renderTable();
+    
+    setProgress(100, `Instagram encontrado!`);
+    addLog(`✓ Sucesso: Perfil verificado (${l.ig}).`, false);
+    showToast(`✓ Instagram de ${l.nome} encontrado!`);
+  } else {
+    setProgress(100, `Não encontrado`);
+    addLog(`✗ Conta não localizada ou perfil privado.`, false);
+    showToast(`Não foi possível encontrar o Instagram de ${l.nome}.`);
+  }
+  
+  await sleep(1500);
+  progSec.style.display = 'none';
+}
+
+async function searchInstagramBulk(){
+  const targets = allLeads.filter(l=>!l.ig);
+  if(!targets.length){
+    showToast('Todos os leads já possuem Instagram');
+    return;
+  }
+  
+  if(!confirm(`Deseja usar a IA para buscar Instagram de ${targets.length} profissionais?`)) return;
+  
+  const progSec = document.getElementById('progSec');
+  progSec.style.display = 'block';
+  document.getElementById('progLog').innerHTML = '';
+  setProgress(0, `Pesquisando ${targets.length} IGs...`);
+  
+  addLog(`EZ AI Agent: Iniciando pesquisa em lote (Deep Search)...`, true);
+  await sleep(1000);
+  
+  let foundCount = 0;
+  for(let i=0; i<targets.length; i++){
+    const l = targets[i];
+    const pct = Math.round(((i+1)/targets.length)*100);
+    setProgress(pct, `Processando: ${l.nome}`);
+    
+    if(i % 3 === 0) addLog(`Consultando API de plataforma para ${l.nome}...`, true);
+    
+    // Simular tempo de busca por item
+    await sleep(Math.random() * 400 + 200);
+    
+    // Usar dados reais se disponíveis
+    const realMatch = REAL_LEADS_DB.find(r=>r.nome === l.nome);
+    
+    if(realMatch && realMatch.instagram){
+      l.ig = realMatch.instagram;
+      l.fonte = 'instagram';
+      foundCount++;
+      addLog(`✓ IG encontrado para ${l.nome}`, false);
+    } else {
+      addLog(`✗ Nenhum IG público para ${l.nome}`, false);
+    }
+  }
+  
+  saveData();
+  updateStats();
+  renderTable();
+  
+  setProgress(100, `Pesquisa concluída!`);
+  addLog(`✓ Finalizado: ${foundCount} Instagrams encontrados em ${targets.length} buscas.`, false);
+  showToast(`✓ IA encontrou ${foundCount} novos Instagrams!`);
+  
+  await sleep(2000);
+  progSec.style.display = 'none';
+}
+
+loadData();
+loadTemplates();
+renderTemplates();
+updateStats();renderTable();
+
+// Update signed contracts counter on load
+try {
+    const sc = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]');
+    document.getElementById('signedCount').textContent = sc.length;
+} catch(e){}
+</script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrato para Assinatura — NET Serviços</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh;}
+.topbar{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:#fff;padding:24px 24px 20px;text-align:center;border-bottom:3px solid #10b981;}
+.topbar .logo-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:8px;}
+.topbar .logo-img{width:52px;height:52px;background:#fff;border-radius:12px;padding:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+.topbar .logo-img svg{width:100%;height:100%;}
+.topbar .logo-text{text-align:left;}
+.topbar .logo-text h1{font-size:22px;font-weight:800;letter-spacing:-0.5px;line-height:1.1;}
+.topbar .logo-text h1 span{color:#3b82f6;}
+.topbar .logo-text .sub{font-size:11px;color:#94a3b8;margin-top:2px;}
+.topbar p.desc{font-size:12px;color:#94a3b8;margin-top:4px;}
+.topbar .law{display:inline-block;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);padding:3px 10px;border-radius:20px;font-size:10px;color:#10b981;margin-top:8px;font-weight:600;}
+.container{max-width:720px;margin:30px auto;padding:0 16px 60px;}
+.card{background:#fff;border-radius:16px;box-shadow:0 4px 30px rgba(0,0,0,0.08);overflow:hidden;}
+.card-header{padding:24px 30px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.card-header h2{font-size:16px;font-weight:700;color:#0f172a;}
+.card-header .meta{font-size:11px;color:#94a3b8;}
+.badge{font-size:10px;padding:5px 14px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.badge-pending{background:#fef3c7;color:#92400e;}
+.badge-signed{background:#d1fae5;color:#065f46;}
+.badge-expired{background:#fee2e2;color:#991b1b;}
+
+.contract-body{padding:30px;font-family:Georgia,'Times New Roman',serif;font-size:13.5px;line-height:1.75;color:#334155;max-height:55vh;overflow-y:auto;border-bottom:1px solid #e2e8f0;}
+.contract-body::-webkit-scrollbar{width:6px;}
+.contract-body::-webkit-scrollbar-track{background:#f1f5f9;}
+.contract-body::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
+.contract-body h2{font-family:'Inter',sans-serif;font-size:16px;text-align:center;margin-bottom:8px;color:#0f172a;}
+.contract-body h3{font-family:'Inter',sans-serif;font-size:13.5px;margin-top:22px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #e2e8f0;color:#0f172a;}
+.contract-body p{margin-bottom:10px;text-align:justify;}
+.contract-body ul{margin-left:22px;margin-bottom:12px;}
+.contract-body li{margin-bottom:5px;}
+.contract-body strong{color:#0f172a;}
+
+.sign-section{padding:30px;text-align:center;background:#fafbfc;}
+.sign-section h3{font-size:15px;margin-bottom:6px;color:#0f172a;font-weight:700;}
+.sign-section .subtitle{font-size:12px;color:#64748b;margin-bottom:22px;}
+.sign-pad{width:100%;max-width:420px;height:110px;background:#fff;border:2px dashed #cbd5e1;border-radius:12px;margin:0 auto 18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-style:italic;font-size:14px;transition:all 0.3s ease;position:relative;overflow:hidden;}
+.sign-pad::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(16,185,129,0.03),rgba(59,130,246,0.03));opacity:0;transition:opacity 0.3s;}
+.sign-pad:hover{border-color:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,0.1);}
+.sign-pad:hover::before{opacity:1;}
+.sign-pad.signed{background:#fff;border:2px solid #10b981;cursor:default;box-shadow:0 0 0 4px rgba(16,185,129,0.15);}
+.sign-pad.signed::before{display:none;}
+
+.sign-btn{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;border:none;padding:16px 40px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.25s;width:100%;max-width:420px;margin:0 auto;display:block;letter-spacing:-0.3px;}
+.sign-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,185,129,0.35);}
+.sign-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.token-info{font-size:11px;color:#94a3b8;margin-top:18px;font-family:'Courier New',monospace;letter-spacing:0.5px;}
+
+.success-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);z-index:100;align-items:center;justify-content:center;padding:20px;}
+.success-overlay.show{display:flex;}
+.success-card{background:#fff;border-radius:20px;padding:40px;text-align:center;max-width:450px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:popIn 0.4s ease;}
+@keyframes popIn{from{transform:scale(0.8);opacity:0;}to{transform:scale(1);opacity:1;}}
+.success-card .checkmark{width:70px;height:70px;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:#fff;}
+.success-card h2{font-size:20px;font-weight:800;color:#0f172a;margin-bottom:8px;}
+.success-card p{font-size:13px;color:#64748b;line-height:1.6;}
+.success-card .token-badge{display:inline-block;background:#f1f5f9;padding:6px 16px;border-radius:8px;font-family:'Courier New',monospace;font-size:12px;color:#0f172a;margin-top:12px;font-weight:600;border:1px solid #e2e8f0;}
+
+.error-state{padding:60px 30px;text-align:center;}
+.error-state .icon{font-size:48px;margin-bottom:15px;}
+.error-state h2{font-size:18px;color:#0f172a;margin-bottom:8px;}
+.error-state p{font-size:13px;color:#64748b;max-width:400px;margin:0 auto;}
+
+.footer{text-align:center;padding:20px;font-size:11px;color:#94a3b8;}
+.footer a{color:#10b981;text-decoration:none;}
+
+.loading{padding:60px;text-align:center;}
+.spinner{width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:#10b981;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 15px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo-wrap">
+        <div class="logo-img">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Network mesh icon -->
+                <circle cx="20" cy="20" r="4" fill="#1e40af"/>
+                <circle cx="50" cy="15" r="4" fill="#1e40af"/>
+                <circle cx="80" cy="20" r="4" fill="#1e40af"/>
+                <circle cx="15" cy="50" r="4" fill="#1e40af"/>
+                <circle cx="50" cy="50" r="5" fill="#2563eb"/>
+                <circle cx="85" cy="50" r="4" fill="#1e40af"/>
+                <circle cx="20" cy="80" r="4" fill="#1e40af"/>
+                <circle cx="50" cy="85" r="4" fill="#1e40af"/>
+                <circle cx="80" cy="80" r="4" fill="#1e40af"/>
+                <circle cx="35" cy="35" r="3" fill="#3b82f6"/>
+                <circle cx="65" cy="35" r="3" fill="#3b82f6"/>
+                <circle cx="35" cy="65" r="3" fill="#3b82f6"/>
+                <circle cx="65" cy="65" r="3" fill="#3b82f6"/>
+                <!-- Lines -->
+                <line x1="20" y1="20" x2="50" y2="15" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
+                <line x1="50" y1="15" x2="80" y2="20" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
+                <line x1="20" y1="20" x2="15" y2="50" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
+                <line x1="80" y1="20" x2="85" y2="50" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
+                <line x1="15" y1="50" x2="20" y2="80" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
+                <line x1="85" y1="50" x2="80" y2="80" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
+                <line x1="20" y1="80" x2="50" y2="85" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
+                <line x1="50" y1="85" x2="80" y2="80" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
+                <line x1="20" y1="20" x2="50" y2="50" stroke="#60a5fa" stroke-width="1" opacity="0.4"/>
+                <line x1="80" y1="20" x2="50" y2="50" stroke="#60a5fa" stroke-width="1" opacity="0.4"/>
+                <line x1="20" y1="80" x2="50" y2="50" stroke="#60a5fa" stroke-width="1" opacity="0.4"/>
+                <line x1="80" y1="80" x2="50" y2="50" stroke="#60a5fa" stroke-width="1" opacity="0.4"/>
+                <line x1="15" y1="50" x2="50" y2="50" stroke="#60a5fa" stroke-width="1" opacity="0.4"/>
+                <line x1="85" y1="50" x2="50" y2="50" stroke="#60a5fa" stroke-width="1" opacity="0.4"/>
+                <line x1="50" y1="15" x2="50" y2="50" stroke="#60a5fa" stroke-width="1" opacity="0.4"/>
+                <line x1="50" y1="85" x2="50" y2="50" stroke="#60a5fa" stroke-width="1" opacity="0.4"/>
+                <line x1="35" y1="35" x2="65" y2="35" stroke="#93c5fd" stroke-width="1" opacity="0.5"/>
+                <line x1="65" y1="35" x2="65" y2="65" stroke="#93c5fd" stroke-width="1" opacity="0.5"/>
+                <line x1="65" y1="65" x2="35" y2="65" stroke="#93c5fd" stroke-width="1" opacity="0.5"/>
+                <line x1="35" y1="65" x2="35" y2="35" stroke="#93c5fd" stroke-width="1" opacity="0.5"/>
+            </svg>
+        </div>
+        <div class="logo-text">
+            <h1><span>NET</span> Serviços</h1>
+            <div class="sub">Soluções Digitais Profissionais</div>
+        </div>
+    </div>
+    <p class="desc">Assinatura Digital de Contrato</p>
+    <div class="law">🔒 Lei nº 14.063/2020 · Assinaturas Eletrônicas</div>
+</div>
+
+<div class="container">
+    <div class="card" id="mainCard">
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p style="color:#64748b; font-size:13px;">Carregando contrato...</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-state" id="errorState" style="display:none;">
+            <div class="icon">📄</div>
+            <h2>Contrato não encontrado</h2>
+            <p>Este link pode estar expirado ou o contrato foi removido. Entre em contato com a NET Serviços para obter um novo link.</p>
+        </div>
+
+        <!-- Contract Content (hidden until loaded) -->
+        <div id="contractLoaded" style="display:none;">
+            <div class="card-header">
+                <div>
+                    <h2 id="contractTitle">Contrato de Prestação de Serviços</h2>
+                    <div class="meta" id="contractMeta"></div>
+                </div>
+                <span class="badge badge-pending" id="statusBadge">Pendente</span>
+            </div>
+            <div class="contract-body" id="contractBody"></div>
+            
+            <!-- Sign Section -->
+            <div class="sign-section" id="signSection">
+                <h3>Assinatura Digital do Contratante</h3>
+                <p class="subtitle">Clique no campo abaixo para aplicar sua assinatura digital neste documento.</p>
+                <div class="sign-pad" id="signPad" onclick="applySignature()">
+                    Toque aqui para assinar
+                </div>
+                <button class="sign-btn" id="confirmBtn" onclick="confirmSignature()" disabled>
+                    Confirmar Assinatura do Contrato
+                </button>
+                <p class="token-info">Token de autenticação: <strong id="tokenDisplay"></strong></p>
+            </div>
+
+            <!-- Already Signed -->
+            <div id="alreadySigned" style="display:none; padding:30px; text-align:center; background:#f0fdf4;">
+                <div style="font-size:40px; margin-bottom:10px;">✅</div>
+                <h3 style="color:#065f46; margin-bottom:5px;">Este contrato já foi assinado</h3>
+                <p style="font-size:13px; color:#047857;" id="signedInfo"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Documento gerado por <a href="#">NET Serviços</a> · EZ-Sign Digital · Porto Velho, RO
+    </div>
+</div>
+
+<!-- Success Overlay -->
+<div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+        <div class="checkmark">✓</div>
+        <h2>Contrato Assinado!</h2>
+        <p>Sua assinatura digital foi registrada com sucesso. Este documento agora possui validade jurídica nos termos da legislação brasileira.</p>
+        <div class="token-badge" id="receiptToken"></div>
+        <p style="margin-top:15px; font-size:11px; color:#94a3b8;">Assinado em: <span id="signDateTime"></span></p>
+    </div>
+</div>
+
+<script>
+// ── CONTRACT DATA MANAGEMENT ─────────────────────────────────
+const urlParams = new URLSearchParams(window.location.search);
+const contractId = urlParams.get('id');
+
+let contractData = null;
+
+function init() {
+    if (!contractId) {
+        showError();
+        return;
+    }
+
+    // Try to load contract from localStorage
+    const stored = localStorage.getItem('ez_contract_' + contractId);
+    if (!stored) {
+        showError();
+        return;
+    }
+
+    try {
+        contractData = JSON.parse(stored);
+    } catch(e) {
+        showError();
+        return;
+    }
+
+    // Show the contract
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('contractLoaded').style.display = 'block';
+
+    // Populate content
+    document.getElementById('contractBody').innerHTML = contractData.html;
+    document.getElementById('tokenDisplay').textContent = contractData.token;
+    document.getElementById('contractMeta').textContent = `Emitido para: ${contractData.clientName} · ${contractData.date}`;
+
+    // Check if already signed
+    if (contractData.signed) {
+        showAlreadySigned();
+    }
+
+    // Listen for updates from the main app (edits)
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'ez_contract_' + contractId) {
+            const updated = JSON.parse(e.newValue);
+            if (updated) {
+                contractData = updated;
+                document.getElementById('contractBody').innerHTML = contractData.html;
+                document.getElementById('tokenDisplay').textContent = contractData.token;
+                document.getElementById('contractMeta').textContent = `Emitido para: ${contractData.clientName} · ${contractData.date}`;
+                
+                if (contractData.signed) {
+                    showAlreadySigned();
+                }
+            }
+        }
+    });
+}
+
+function showError() {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('errorState').style.display = 'block';
+}
+
+function showAlreadySigned() {
+    document.getElementById('signSection').style.display = 'none';
+    document.getElementById('alreadySigned').style.display = 'block';
+    document.getElementById('statusBadge').textContent = 'Assinado';
+    document.getElementById('statusBadge').className = 'badge badge-signed';
+    document.getElementById('signedInfo').textContent = 
+        `Assinado por ${contractData.clientName} em ${contractData.signedAt || 'data registrada'}. Token: ${contractData.token}`;
+}
+
+function applySignature() {
+    const pad = document.getElementById('signPad');
+    if (pad.classList.contains('signed')) return;
+
+    const name = contractData.clientName || 'Assinatura';
+    pad.innerHTML = `<span style="font-family:'Dancing Script',cursive;font-size:34px;color:#0f172a;position:relative;z-index:1;">${name}</span>`;
+    pad.classList.add('signed');
+    document.getElementById('confirmBtn').disabled = false;
+}
+
+function confirmSignature() {
+    const now = new Date();
+    const dateStr = now.toLocaleString('pt-BR');
+    
+    // Update contract data
+    contractData.signed = true;
+    contractData.signedAt = dateStr;
+    contractData.signedTimestamp = now.getTime();
+
+    // Save back to localStorage (this triggers 'storage' event in the main app)
+    localStorage.setItem('ez_contract_' + contractId, JSON.stringify(contractData));
+
+    // Also set a separate signal key for the main app to detect
+    localStorage.setItem('ez_signature_event', JSON.stringify({
+        contractId: contractId,
+        clientName: contractData.clientName,
+        signedAt: dateStr,
+        token: contractData.token,
+        timestamp: now.getTime()
+    }));
+    
+    // Add to signed contracts list for the main app
+    let signedList = [];
+    try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e){}
+    signedList.push({
+        contractId: contractId,
+        clientName: contractData.clientName,
+        clientDoc: contractData.clientDoc || '',
+        clientTel: contractData.clientTel || '',
+        token: contractData.token,
+        signedAt: dateStr,
+        date: contractData.date,
+        html: contractData.html
+    });
+    localStorage.setItem('ez_signed_contracts', JSON.stringify(signedList));
+
+    // Show success
+    document.getElementById('statusBadge').textContent = 'Assinado';
+    document.getElementById('statusBadge').className = 'badge badge-signed';
+    
+    document.getElementById('receiptToken').textContent = contractData.token;
+    document.getElementById('signDateTime').textContent = dateStr;
+    document.getElementById('successOverlay').classList.add('show');
+
+    // After 5 seconds, redirect back to main app
+    setTimeout(() => {
+        const baseUrl = window.location.href.replace(/assinatura\.html.*$/, '');
+        const mainPage = baseUrl + 'vibe-prospecter-v3%20(1).html?signed=' + contractId;
+        window.location.href = mainPage;
+    }, 5000);
+}
+
+// Initialize
+setTimeout(init, 600);
+</script>
+</body>
+</html>
