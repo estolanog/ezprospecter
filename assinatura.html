@@ -197,23 +197,37 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
 // ── CONTRACT DATA MANAGEMENT ─────────────────────────────────
 const urlParams = new URLSearchParams(window.location.search);
 const contractId = urlParams.get('id') || 'unknown';
+const blobId = urlParams.get('blob');
 
 let contractData = null;
 
-function init() {
-    // PRIMARY: Load contract data from URL hash (base64 encoded)
-    const hash = window.location.hash.substring(1);
-    
-    if (hash) {
+async function init() {
+    // 1. PRIMARY: Fetch from JSONBlob if blobId is present
+    if (blobId) {
         try {
-            const jsonStr = decodeURIComponent(atob(hash));
-            contractData = JSON.parse(jsonStr);
+            const response = await fetch(`https://jsonblob.com/api/jsonBlob/${blobId}`);
+            if (response.ok) {
+                contractData = await response.json();
+            }
         } catch(e) {
-            // Hash decode failed, try localStorage fallback
+            console.error("Erro ao buscar dados do contrato remoto:", e);
+        }
+    }
+
+    // 2. SECONDARY: Load contract data from URL hash (base64 encoded)
+    if (!contractData) {
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+            try {
+                const jsonStr = decodeURIComponent(atob(hash));
+                contractData = JSON.parse(jsonStr);
+            } catch(e) {
+                // Hash decode failed
+            }
         }
     }
     
-    // FALLBACK: Try localStorage (same device only)
+    // 3. FALLBACK: Try localStorage (same device only)
     if (!contractData) {
         const stored = localStorage.getItem('ez_contract_' + contractId);
         if (stored) {
