@@ -529,7 +529,10 @@ td{padding:9px 12px;vertical-align:middle;}
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-top: 1px solid var(--border); padding-top: 25px;">
             <h3 style="font-size: 14px; color: var(--text); display: flex; align-items: center; gap: 8px;"><i class="ti ti-file-certificate"></i> Contratos Emitidos (Links Gerados)</h3>
-            <button class="btn-primary" style="font-size: 11px; padding: 6px 14px;" onclick="openManualContract()"><i class="ti ti-plus"></i> Novo Contrato</button>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn-ghost" style="font-size: 11px; padding: 6px 14px;" onclick="syncContractsStatus()" id="syncBtn"><i class="ti ti-refresh"></i> Sincronizar Status</button>
+                <button class="btn-primary" style="font-size: 11px; padding: 6px 14px;" onclick="openManualContract()"><i class="ti ti-plus"></i> Novo Contrato</button>
+            </div>
         </div>
         <div class="table-wrap">
             <div class="table-scroll">
@@ -668,6 +671,40 @@ td{padding:9px 12px;vertical-align:middle;}
                 </div>
             </div>
         </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT LEAD MODAL -->
+<div class="modal-overlay" id="editLeadModal">
+  <div class="modal-card" style="max-width: 400px;">
+    <div class="modal-head">
+      <h3><i class="ti ti-pencil"></i> Editar Informações</h3>
+      <button class="icon-btn" onclick="closeEditLead()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit_lid">
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label>Nome / Empresa</label>
+        <input type="text" id="edit_nome">
+      </div>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label>Profissão / Especialidade</label>
+        <input type="text" id="edit_prof">
+      </div>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label>Cidade</label>
+        <input type="text" id="edit_cidade">
+      </div>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label>Telefone / WhatsApp</label>
+        <input type="text" id="edit_tel">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label>Instagram</label>
+        <input type="text" id="edit_ig">
+      </div>
+      <button class="btn-primary" style="width: 100%; height: 40px; font-size: 14px;" onclick="saveLeadEdit()"><i class="ti ti-device-floppy"></i> Salvar Alterações</button>
     </div>
   </div>
 </div>
@@ -1119,6 +1156,7 @@ function renderTable(){
         ${telClean?`<a href="tel:+55${telClean}"><button class="icon-btn call" title="Ligar"><i class="ti ti-phone-call"></i></button></a>`:''}
         <button class="icon-btn" onclick="copyTel('${l.tel||''}')" title="Copiar número"><i class="ti ti-copy"></i></button>
         ${l.ig?`<button class="icon-btn ig-btn" onclick="window.open('https://instagram.com/${(l.ig||'').replace('@','')}','_blank')" title="Abrir Instagram"><i class="ti ti-brand-instagram"></i></button>`:`<button class="icon-btn" style="color:var(--amber)" onclick="searchInstagramSingle(${lid})" title="Buscar Instagram com IA"><i class="ti ti-sparkles"></i></button>`}
+        <button class="icon-btn" style="color:var(--cyan)" onclick="openEditLead(${lid})" title="Editar Lead"><i class="ti ti-pencil"></i></button>
         <button class="icon-btn" style="color:var(--accent)" onclick="openContract(${lid})" title="Criar Contrato"><i class="ti ti-file-pencil"></i></button>
         <button class="icon-btn danger" onclick="removeLead(${lid})" title="Remover"><i class="ti ti-trash"></i></button>
       </div></td>
@@ -1161,6 +1199,39 @@ function removeLead(id){
     saveData();
     updateStats();
     renderTable();
+}
+
+// ── EDIT LEAD ──────────────────────────────────────────────
+function openEditLead(id) {
+    const l = allLeads.find(l => l.id === id);
+    if(!l) return;
+    document.getElementById('edit_lid').value = l.id;
+    document.getElementById('edit_nome').value = l.nome || '';
+    document.getElementById('edit_prof').value = l.profissao || '';
+    document.getElementById('edit_cidade').value = l.cidade || '';
+    document.getElementById('edit_tel').value = l.tel || '';
+    document.getElementById('edit_ig').value = l.ig || '';
+    document.getElementById('editLeadModal').classList.add('show');
+}
+
+function closeEditLead() {
+    document.getElementById('editLeadModal').classList.remove('show');
+}
+
+function saveLeadEdit() {
+    const id = parseInt(document.getElementById('edit_lid').value);
+    const l = allLeads.find(x => x.id === id);
+    if(l) {
+        l.nome = document.getElementById('edit_nome').value;
+        l.profissao = document.getElementById('edit_prof').value;
+        l.cidade = document.getElementById('edit_cidade').value;
+        l.tel = document.getElementById('edit_tel').value;
+        l.ig = document.getElementById('edit_ig').value;
+        saveData();
+        renderTable();
+        showToast('Lead atualizado com sucesso!');
+    }
+    closeEditLead();
 }
 
 // ── TEMPLATES ──────────────────────────────────────────────
@@ -1265,7 +1336,10 @@ function switchView(view, el){
     document.getElementById('signedView').style.display = view==='signed'?'block':'none';
     document.querySelectorAll('.main-nav .tab').forEach(b=>b.classList.remove('active'));
     if(el) el.classList.add('active');
-    if(view==='signed') renderSignedContracts();
+    if(view==='signed') {
+        renderSignedContracts();
+        renderContracts(); // Certifica que a lista de links gerados também é carregada
+    }
 }
 
 function renderSignedContracts(){
@@ -1409,7 +1483,7 @@ function downloadSignedContract(idx){
 })();
 
 function renderContracts(){
-    const contracts = allLeads.filter(l=>l.status==='contrato');
+    const contracts = allLeads.filter(l=>l.status==='contrato' && l.signingLink);
     const tbody = document.getElementById('contractsBody');
     const empty = document.getElementById('emptyContracts');
     
@@ -1422,15 +1496,113 @@ function renderContracts(){
     tbody.innerHTML = contracts.map(l=>`
         <tr>
             <td><strong>${l.nome}</strong><br><small style="color:var(--text3)">${l.profissao} em ${l.cidade}</small></td>
-            <td><span class="pill" style="background:var(--green-bg); color:var(--green)">✓ Assinado</span></td>
-            <td><code style="font-family:var(--mono); color:var(--accent2)">EZ-${l.id.toString(36).toUpperCase().slice(-6)}</code></td>
+            <td><span class="pill" style="background:var(--accent-bg); color:var(--accent)">⏳ Pendente</span></td>
+            <td><code style="font-family:var(--mono); color:var(--accent2)">${l.contractToken || '---'}</code></td>
             <td style="color:var(--text3)">${new Date().toLocaleDateString()}</td>
             <td>
-                <button class="icon-btn" title="Ver Documento" onclick="openContract(${l.id})"><i class="ti ti-eye"></i></button>
-                <button class="icon-btn" title="Baixar PDF"><i class="ti ti-download"></i></button>
+                <div style="display:flex; gap:6px;">
+                    <button class="icon-btn" title="Copiar Link" onclick="copyDirectLink('${l.signingLink}')"><i class="ti ti-copy"></i></button>
+                    <button class="icon-btn" title="Enviar WhatsApp" onclick="sendDirectWA('${l.nome}', '${l.tel}', '${l.signingLink}', '${l.contractToken}')" style="color:var(--green)"><i class="ti ti-brand-whatsapp"></i></button>
+                    <button class="icon-btn danger" title="Excluir" onclick="removeContractLink('${l.id}')"><i class="ti ti-trash"></i></button>
+                </div>
             </td>
         </tr>
     `).join('');
+}
+
+function copyDirectLink(link){
+    if(!link) return showToast('Link não encontrado');
+    navigator.clipboard.writeText(link);
+    showToast('<i class="ti ti-copy"></i> Link copiado!');
+}
+
+function sendDirectWA(nome, tel, link, token){
+    if(!link) return showToast('Link não encontrado');
+    const message = encodeURIComponent(
+        `Olá ${nome}! 👋\n\n` +
+        `Segue o seu *Contrato de Prestação de Serviços* da NET Serviços para assinatura digital.\n\n` +
+        `🔗 *Assine aqui:*\n${link}\n\n` +
+        `📝 *Token:* ${token}\n\n` +
+        `Basta abrir o link e clicar em "Assinar".`
+    );
+    window.open(`https://wa.me/55${tel.replace(/[^0-9]/g,'')}?text=${message}`, '_blank');
+}
+
+function removeContractLink(id){
+    if(!confirm('Deseja remover este link? O lead voltará para o status anterior.')) return;
+    const l = allLeads.find(l=>l.id == id);
+    if(l){
+        l.status = 'aceitou'; // Voltar status
+        delete l.signingLink;
+        delete l.contractToken;
+        saveData();
+        updateStats();
+        renderTable();
+        renderContracts();
+    }
+}
+
+async function syncContractsStatus() {
+    const btn = document.getElementById('syncBtn');
+    if(btn) btn.innerHTML = '<i class="ti ti-loader" style="animation: spin 1s linear infinite;"></i> Buscando...';
+    
+    const pendingContracts = allLeads.filter(l => l.status === 'contrato' && l.signingLink && l.signingLink.includes('np='));
+    let updatedCount = 0;
+
+    for (const lead of pendingContracts) {
+        try {
+            const urlParams = new URL(lead.signingLink).searchParams;
+            const npId = urlParams.get('np');
+            if (!npId) continue;
+
+            const res = await fetch(`https://api.npoint.io/${npId}`);
+            if (res.ok) {
+                const data = await res.json();
+                if (data.signed) {
+                    // Update lead status
+                    lead.status = 'contrato'; 
+                    lead.signedAt = data.signedAt;
+                    delete lead.signingLink; // Remove from pending list
+                    updatedCount++;
+
+                    // Add to signed contracts list if not already there
+                    let signedList = [];
+                    try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e){}
+                    
+                    const alreadyExists = signedList.find(s => s.token === data.token);
+                    if (!alreadyExists) {
+                        signedList.push({
+                            contractId: data.id,
+                            clientName: data.clientName,
+                            clientDoc: data.clientDoc || '',
+                            clientTel: data.clientTel || '',
+                            token: data.token,
+                            signedAt: data.signedAt,
+                            date: data.date,
+                            html: data.html,
+                            signerIp: data.signerIp || 'Sincronizado via nuvem'
+                        });
+                        localStorage.setItem('ez_signed_contracts', JSON.stringify(signedList));
+                    }
+                }
+            }
+        } catch(e) {
+            console.error('Erro ao sincronizar', e);
+        }
+    }
+
+    if (updatedCount > 0) {
+        saveData();
+        updateStats();
+        renderTable();
+        renderContracts();
+        renderSignedContracts();
+        showToast(`🎉 ${updatedCount} contrato(s) assinado(s) sincronizado(s)!`);
+    } else {
+        showToast('Nenhum novo contrato assinado.');
+    }
+    
+    if(btn) btn.innerHTML = '<i class="ti ti-refresh"></i> Sincronizar Status';
 }
 
 let currentContractLead = null;
@@ -1691,21 +1863,23 @@ async function generateSigningLink(){
     document.getElementById('generatedLink').value = 'Aguarde...';
     
     try {
-        // Upload contract data to jsonblob.com (free, no auth needed)
-        const response = await fetch('https://jsonblob.com/api/jsonBlob', {
+        // Upload contract data to npoint.io (free, reliable, CORS-friendly)
+        const response = await fetch('https://api.npoint.io/', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(contractData)
         });
+        const data = await response.json();
         
-        // Get the blob ID from the Location header or URL
-        const location = response.headers.get('Location') || response.url;
-        const blobId = location.split('/').pop();
+        // Get the document ID from the response body
+        const documentId = data.documentId || data.id || (data.url ? data.url.split('/').pop() : blobId);
         
         // Build short signing link
         const deployedBase = 'https://ezprospecter.vercel.app/';
-        const signingLink = `${deployedBase}assinatura.html?blob=${blobId}`;
+        const signingLink = `${deployedBase}assinatura.html?np=${documentId}`;
         
+        if(currentContractLead) currentContractLead.signingLink = signingLink;
+
         // Show the link
         document.getElementById('generatedLink').value = signingLink;
         document.getElementById('linkStatus').innerHTML = '<span style="color:var(--green)">✓ Link ativo · Aguardando assinatura do cliente</span>';
@@ -1717,15 +1891,24 @@ async function generateSigningLink(){
         document.getElementById('generatedLink').value = signingLink;
         document.getElementById('linkStatus').innerHTML = '<span style="color:var(--amber)">⚠ Link local gerado (funciona no mesmo navegador)</span>';
         showToast('⚠ Link gerado em modo local');
+        if(currentContractLead) currentContractLead.signingLink = signingLink;
     }
     
     // Save lead status
     if(currentContractLead && currentContractLead.id) {
         currentContractLead.status = 'contrato';
         currentContractLead.contractId = generatedContractId;
+        currentContractLead.contractToken = token; // Store token too
+        
+        // If it's a new manual contract, it might not be in allLeads yet
+        if (!allLeads.find(l => l.id === currentContractLead.id)) {
+            allLeads.push(currentContractLead);
+        }
+
         saveData();
         updateStats();
         renderTable();
+        renderContracts(); // Refresh the list in the Contratos tab
     }
 }
 
