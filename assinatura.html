@@ -27,8 +27,6 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
 .badge{font-size:10px;padding:5px 14px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
 .badge-pending{background:#fef3c7;color:#92400e;}
 .badge-signed{background:#d1fae5;color:#065f46;}
-.badge-expired{background:#fee2e2;color:#991b1b;}
-
 .contract-body{padding:30px;font-family:Georgia,'Times New Roman',serif;font-size:13.5px;line-height:1.75;color:#334155;max-height:55vh;overflow-y:auto;border-bottom:1px solid #e2e8f0;}
 .contract-body::-webkit-scrollbar{width:6px;}
 .contract-body::-webkit-scrollbar-track{background:#f1f5f9;}
@@ -39,22 +37,16 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
 .contract-body ul{margin-left:22px;margin-bottom:12px;}
 .contract-body li{margin-bottom:5px;}
 .contract-body strong{color:#0f172a;}
-
 .sign-section{padding:30px;text-align:center;background:#fafbfc;}
 .sign-section h3{font-size:15px;margin-bottom:6px;color:#0f172a;font-weight:700;}
 .sign-section .subtitle{font-size:12px;color:#64748b;margin-bottom:22px;}
 .sign-pad{width:100%;max-width:420px;height:110px;background:#fff;border:2px dashed #cbd5e1;border-radius:12px;margin:0 auto 18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-style:italic;font-size:14px;transition:all 0.3s ease;position:relative;overflow:hidden;}
-.sign-pad::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(16,185,129,0.03),rgba(59,130,246,0.03));opacity:0;transition:opacity 0.3s;}
 .sign-pad:hover{border-color:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,0.1);}
-.sign-pad:hover::before{opacity:1;}
 .sign-pad.signed{background:#fff;border:2px solid #10b981;cursor:default;box-shadow:0 0 0 4px rgba(16,185,129,0.15);}
-.sign-pad.signed::before{display:none;}
-
 .sign-btn{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;border:none;padding:16px 40px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.25s;width:100%;max-width:420px;margin:0 auto;display:block;letter-spacing:-0.3px;}
 .sign-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,185,129,0.35);}
 .sign-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
 .token-info{font-size:11px;color:#94a3b8;margin-top:18px;font-family:'Courier New',monospace;letter-spacing:0.5px;}
-
 .success-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);z-index:100;align-items:center;justify-content:center;padding:20px;}
 .success-overlay.show{display:flex;}
 .success-card{background:#fff;border-radius:20px;padding:40px;text-align:center;max-width:450px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:popIn 0.4s ease;}
@@ -63,15 +55,12 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
 .success-card h2{font-size:20px;font-weight:800;color:#0f172a;margin-bottom:8px;}
 .success-card p{font-size:13px;color:#64748b;line-height:1.6;}
 .success-card .token-badge{display:inline-block;background:#f1f5f9;padding:6px 16px;border-radius:8px;font-family:'Courier New',monospace;font-size:12px;color:#0f172a;margin-top:12px;font-weight:600;border:1px solid #e2e8f0;}
-
 .error-state{padding:60px 30px;text-align:center;}
 .error-state .icon{font-size:48px;margin-bottom:15px;}
 .error-state h2{font-size:18px;color:#0f172a;margin-bottom:8px;}
 .error-state p{font-size:13px;color:#64748b;max-width:400px;margin:0 auto;}
-
 .footer{text-align:center;padding:20px;font-size:11px;color:#94a3b8;}
 .footer a{color:#10b981;text-decoration:none;}
-
 .loading{padding:60px;text-align:center;}
 .spinner{width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:#10b981;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 15px;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -83,7 +72,6 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
     <div class="logo-wrap">
         <div class="logo-img">
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Network mesh icon -->
                 <circle cx="20" cy="20" r="4" fill="#1e40af"/>
                 <circle cx="50" cy="15" r="4" fill="#1e40af"/>
                 <circle cx="80" cy="20" r="4" fill="#1e40af"/>
@@ -97,7 +85,6 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
                 <circle cx="65" cy="35" r="3" fill="#3b82f6"/>
                 <circle cx="35" cy="65" r="3" fill="#3b82f6"/>
                 <circle cx="65" cy="65" r="3" fill="#3b82f6"/>
-                <!-- Lines -->
                 <line x1="20" y1="20" x2="50" y2="15" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
                 <line x1="50" y1="15" x2="80" y2="20" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
                 <line x1="20" y1="20" x2="15" y2="50" stroke="#3b82f6" stroke-width="1.5" opacity="0.6"/>
@@ -131,20 +118,17 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
 
 <div class="container">
     <div class="card" id="mainCard">
-        <!-- Loading State -->
         <div class="loading" id="loadingState">
             <div class="spinner"></div>
             <p style="color:#64748b; font-size:13px;">Carregando contrato...</p>
         </div>
 
-        <!-- Error State -->
         <div class="error-state" id="errorState" style="display:none;">
             <div class="icon">📄</div>
             <h2>Contrato não encontrado</h2>
-            <p>Este link pode estar expirado ou o contrato foi removido. Entre em contato com a NET Serviços para obter um novo link.</p>
+            <p>Este link pode estar incompleto ou expirado. Entre em contato com a NET Serviços para obter um novo link de assinatura.</p>
         </div>
 
-        <!-- Contract Content (hidden until loaded) -->
         <div id="contractLoaded" style="display:none;">
             <div class="card-header">
                 <div>
@@ -154,8 +138,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
                 <span class="badge badge-pending" id="statusBadge">Pendente</span>
             </div>
             <div class="contract-body" id="contractBody"></div>
-            
-            <!-- Sign Section -->
+
             <div class="sign-section" id="signSection">
                 <h3>Assinatura Digital do Contratante</h3>
                 <p class="subtitle">Clique no campo abaixo para aplicar sua assinatura digital neste documento.</p>
@@ -168,7 +151,6 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
                 <p class="token-info">Token de autenticação: <strong id="tokenDisplay"></strong></p>
             </div>
 
-            <!-- Already Signed -->
             <div id="alreadySigned" style="display:none; padding:30px; text-align:center; background:#f0fdf4;">
                 <div style="font-size:40px; margin-bottom:10px;">✅</div>
                 <h3 style="color:#065f46; margin-bottom:5px;">Este contrato já foi assinado</h3>
@@ -182,7 +164,6 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
     </div>
 </div>
 
-<!-- Success Overlay -->
 <div class="success-overlay" id="successOverlay">
     <div class="success-card">
         <div class="checkmark">✓</div>
@@ -194,81 +175,47 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
 </div>
 
 <script>
-// ── CONTRACT DATA MANAGEMENT ─────────────────────────────────
-const urlParams = new URLSearchParams(window.location.search);
-const npId = urlParams.get('np');
-const blobId = urlParams.get('blob');
-const contractId = npId || urlParams.get('id') || 'unknown';
-
 let contractData = null;
 
-async function init() {
-    // 1. PRIMARY: Fetch from npoint.io (reliable, CORS-friendly)
-    if (npId) {
-        try {
-            const response = await fetch(`https://api.npoint.io/${npId}`);
-            if (response.ok) {
-                contractData = await response.json();
-            }
-        } catch(e) {
-            console.error("Erro ao buscar dados do npoint:", e);
-        }
-    }
-
-    // 2. FALLBACK 1: Fetch from JSONBlob (backwards compatibility)
-    if (!contractData && blobId) {
-        try {
-            const response = await fetch(`https://jsonblob.com/api/jsonBlob/${blobId}`);
-            if (response.ok) {
-                contractData = await response.json();
-            }
-        } catch(e) {
-            console.error("Erro ao buscar dados do jsonblob:", e);
-        }
-    }
-
-    // 2. SECONDARY: Load contract data from URL hash (base64 encoded)
-    if (!contractData) {
-        const hash = window.location.hash.substring(1);
-        if (hash) {
-            try {
-                const jsonStr = decodeURIComponent(atob(hash));
-                contractData = JSON.parse(jsonStr);
-            } catch(e) {
-                // Hash decode failed
-            }
-        }
-    }
-    
-    // 3. FALLBACK: Try localStorage (same device only)
-    if (!contractData) {
-        const stored = localStorage.getItem('ez_contract_' + contractId);
-        if (stored) {
-            try { contractData = JSON.parse(stored); } catch(e) {}
-        }
-    }
-    
-    // No data found anywhere
-    if (!contractData) {
-        showError();
-        return;
-    }
-
-    // Show the contract
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('contractLoaded').style.display = 'block';
-
-    // Populate content
-    document.getElementById('contractBody').innerHTML = contractData.html;
-    document.getElementById('tokenDisplay').textContent = contractData.token;
-    document.getElementById('contractMeta').textContent = `Emitido para: ${contractData.clientName} · ${contractData.date}`;
-
-    // Check if already signed
-    if (contractData.signed) {
-        showAlreadySigned();
+function decodeBase64Safe(str) {
+    try {
+        const bytes = Uint8Array.from(atob(str), c => c.charCodeAt(0));
+        return new TextDecoder('utf-8').decode(bytes);
+    } catch(e) {
+        try { return decodeURIComponent(escape(atob(str))); } catch(e2) { return null; }
     }
 }
 
+async function init() {
+    // 1. PRIMÁRIO: hash base64 na URL — funciona em qualquer dispositivo
+    const hash = window.location.hash.substring(1);
+    if (hash && hash.length > 20) {
+        try {
+            const jsonStr = decodeBase64Safe(hash);
+            if (jsonStr) contractData = JSON.parse(jsonStr);
+        } catch(e) { console.warn('Erro hash:', e); }
+    }
+
+    // 2. FALLBACK: localStorage (mesmo navegador)
+    if (!contractData) {
+        const p = new URLSearchParams(window.location.search);
+        const cid = p.get('id') || p.get('np') || null;
+        if (cid) {
+            try { contractData = JSON.parse(localStorage.getItem('ez_contract_' + cid) || 'null'); } catch(e) {}
+        }
+    }
+
+    if (!contractData) { showError(); return; }
+
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('contractLoaded').style.display = 'block';
+    document.getElementById('contractBody').innerHTML = contractData.html;
+    document.getElementById('tokenDisplay').textContent = contractData.token;
+    document.getElementById('contractMeta').textContent =
+        'Emitido para: ' + contractData.clientName + ' · ' + contractData.date;
+
+    if (contractData.signed) showAlreadySigned();
+}
 
 function showError() {
     document.getElementById('loadingState').style.display = 'none';
@@ -280,16 +227,16 @@ function showAlreadySigned() {
     document.getElementById('alreadySigned').style.display = 'block';
     document.getElementById('statusBadge').textContent = 'Assinado';
     document.getElementById('statusBadge').className = 'badge badge-signed';
-    document.getElementById('signedInfo').innerHTML = 
-        `Assinado por ${contractData.clientName} em ${contractData.signedAt || 'data registrada'}.<br>Token: ${contractData.token}<br><span style="font-size:10px; opacity:0.7;">IP: ${contractData.signerIp || 'N/A'}</span>`;
+    document.getElementById('signedInfo').innerHTML =
+        'Assinado por ' + contractData.clientName + ' em ' + (contractData.signedAt || 'data registrada') + '.<br>' +
+        'Token: ' + contractData.token + '<br>' +
+        '<span style="font-size:10px;opacity:0.7;">IP: ' + (contractData.signerIp || 'N/A') + '</span>';
 }
 
 function applySignature() {
     const pad = document.getElementById('signPad');
     if (pad.classList.contains('signed')) return;
-
-    const name = contractData.clientName || 'Assinatura';
-    pad.innerHTML = `<span style="font-family:'Dancing Script',cursive;font-size:34px;color:#0f172a;position:relative;z-index:1;">${name}</span>`;
+    pad.innerHTML = '<span style="font-family:\'Dancing Script\',cursive;font-size:34px;color:#0f172a;">' + (contractData.clientName || 'Assinatura') + '</span>';
     pad.classList.add('signed');
     document.getElementById('confirmBtn').disabled = false;
 }
@@ -298,83 +245,53 @@ async function confirmSignature() {
     const btn = document.getElementById('confirmBtn');
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;margin-right:8px;display:inline-block;vertical-align:middle;"></div> Processando...';
-    
-    // Capture IP for legal validity
-    let ip = "IP não capturado";
+
+    let ip = 'IP não capturado';
     try {
-        const ipRes = await fetch('https://api.ipify.org?format=json');
-        if(ipRes.ok) {
-            const ipData = await ipRes.json();
-            ip = ipData.ip;
-        }
+        const r = await fetch('https://api.ipify.org?format=json');
+        if (r.ok) { const d = await r.json(); ip = d.ip; }
     } catch(e) {}
 
     const now = new Date();
     const dateStr = now.toLocaleString('pt-BR');
-    
-    // Update contract data
+
     contractData.signed = true;
     contractData.signedAt = dateStr;
     contractData.signedTimestamp = now.getTime();
     contractData.signerIp = ip;
     contractData.userAgent = navigator.userAgent;
 
-    // Update cloud document (npoint.io) so dashboard can see it
-    if (npId) {
-        try {
-            await fetch(`https://api.npoint.io/${npId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(contractData)
-            });
-        } catch(e) {}
-    }
-
-    // Save to localStorage (works if same device/origin)
     try {
-        localStorage.setItem('ez_contract_' + contractId, JSON.stringify(contractData));
+        const cid = contractData.id || 'unknown';
+        localStorage.setItem('ez_contract_' + cid, JSON.stringify(contractData));
         localStorage.setItem('ez_signature_event', JSON.stringify({
-            contractId: contractId,
-            clientName: contractData.clientName,
-            signedAt: dateStr,
-            token: contractData.token,
-            timestamp: now.getTime()
+            contractId: cid, clientName: contractData.clientName,
+            signedAt: dateStr, token: contractData.token, timestamp: now.getTime()
         }));
-        
-        // Add to signed contracts list
-        let signedList = [];
-        try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e2){}
-        signedList.push({
-            contractId: contractId,
-            clientName: contractData.clientName,
-            clientDoc: contractData.clientDoc || '',
-            clientTel: contractData.clientTel || '',
-            token: contractData.token,
-            signedAt: dateStr,
-            date: contractData.date,
-            html: contractData.html,
-            signerIp: ip
+        let list = [];
+        try { list = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e) {}
+        list.push({
+            contractId: cid, clientName: contractData.clientName,
+            clientDoc: contractData.clientDoc || '', clientTel: contractData.clientTel || '',
+            token: contractData.token, signedAt: dateStr, date: contractData.date,
+            html: contractData.html, signerIp: ip
         });
-        localStorage.setItem('ez_signed_contracts', JSON.stringify(signedList));
+        localStorage.setItem('ez_signed_contracts', JSON.stringify(list));
     } catch(e) {}
 
-    // Show success
     document.getElementById('statusBadge').textContent = 'Assinado';
     document.getElementById('statusBadge').className = 'badge badge-signed';
-    
     document.getElementById('receiptToken').textContent = contractData.token;
     document.getElementById('signDateTime').textContent = dateStr;
     document.getElementById('successOverlay').classList.add('show');
 
-    // After 4 seconds, show "already signed" state
     setTimeout(() => {
         document.getElementById('successOverlay').classList.remove('show');
         showAlreadySigned();
     }, 4000);
 }
 
-// Initialize
-setTimeout(init, 600);
+setTimeout(init, 400);
 </script>
 </body>
 </html>
