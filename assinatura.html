@@ -196,26 +196,33 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:
 <script>
 // ── CONTRACT DATA MANAGEMENT ─────────────────────────────────
 const urlParams = new URLSearchParams(window.location.search);
-const contractId = urlParams.get('id');
+const contractId = urlParams.get('id') || 'unknown';
 
 let contractData = null;
 
 function init() {
-    if (!contractId) {
-        showError();
-        return;
+    // PRIMARY: Load contract data from URL hash (base64 encoded)
+    const hash = window.location.hash.substring(1);
+    
+    if (hash) {
+        try {
+            const jsonStr = decodeURIComponent(atob(hash));
+            contractData = JSON.parse(jsonStr);
+        } catch(e) {
+            // Hash decode failed, try localStorage fallback
+        }
     }
-
-    // Try to load contract from localStorage
-    const stored = localStorage.getItem('ez_contract_' + contractId);
-    if (!stored) {
-        showError();
-        return;
+    
+    // FALLBACK: Try localStorage (same device only)
+    if (!contractData) {
+        const stored = localStorage.getItem('ez_contract_' + contractId);
+        if (stored) {
+            try { contractData = JSON.parse(stored); } catch(e) {}
+        }
     }
-
-    try {
-        contractData = JSON.parse(stored);
-    } catch(e) {
+    
+    // No data found anywhere
+    if (!contractData) {
         showError();
         return;
     }
@@ -233,24 +240,8 @@ function init() {
     if (contractData.signed) {
         showAlreadySigned();
     }
-
-    // Listen for updates from the main app (edits)
-    window.addEventListener('storage', (e) => {
-        if (e.key === 'ez_contract_' + contractId) {
-            const updated = JSON.parse(e.newValue);
-            if (updated) {
-                contractData = updated;
-                document.getElementById('contractBody').innerHTML = contractData.html;
-                document.getElementById('tokenDisplay').textContent = contractData.token;
-                document.getElementById('contractMeta').textContent = `Emitido para: ${contractData.clientName} · ${contractData.date}`;
-                
-                if (contractData.signed) {
-                    showAlreadySigned();
-                }
-            }
-        }
-    });
 }
+
 
 function showError() {
     document.getElementById('loadingState').style.display = 'none';
@@ -285,33 +276,42 @@ function confirmSignature() {
     contractData.signedAt = dateStr;
     contractData.signedTimestamp = now.getTime();
 
-    // Save back to localStorage (this triggers 'storage' event in the main app)
-    localStorage.setItem('ez_contract_' + contractId, JSON.stringify(contractData));
+    // Save to localStorage (works if same device/origin)
+    try {
+        localStorage.setItem('ez_contract_' + contractId, JSON.stringify(contractData));
+        localStorage.setItem('ez_signature_event', JSON.stringify({
+            contractId: contractId,
+            clientName: contractData.clientName,
+            signedAt: dateStr,
+            token: contractData.token,
+            timestamp: now.getTime()
+        }));
+        
+        // Add to signed contracts list
+        let signedList = [];
+        try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e2){}
+        signedList.push({
+            contractId: contractId,
+            clientName: contractData.clientName,
+            clientDoc: contractData.clientDoc || '',
+            clientTel: contractData.clientTel || '',
+            token: contractData.token,
+            signedAt: dateStr,
+            date: contractData.date,
+            html: contractData.html
+        });
+        localStorage.setItem('ez_signed_contracts', JSON.stringify(signedList));
+    } catch(e) {}
 
-    // Also set a separate signal key for the main app to detect
-    localStorage.setItem('ez_signature_event', JSON.stringify({
-        contractId: contractId,
-        clientName: contractData.clientName,
-        signedAt: dateStr,
-        token: contractData.token,
-        timestamp: now.getTime()
-    }));
+    // Send signature notification to your WhatsApp
+    const notifyMsg = encodeURIComponent(
+        `✅ *CONTRATO ASSINADO!*\n\n` +
+        `📋 Cliente: ${contractData.clientName}\n` +
+        `📝 Token: ${contractData.token}\n` +
+        `📅 Data: ${dateStr}\n\n` +
+        `O cliente assinou o contrato digitalmente via EZ-Sign.`
+    );
     
-    // Add to signed contracts list for the main app
-    let signedList = [];
-    try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e){}
-    signedList.push({
-        contractId: contractId,
-        clientName: contractData.clientName,
-        clientDoc: contractData.clientDoc || '',
-        clientTel: contractData.clientTel || '',
-        token: contractData.token,
-        signedAt: dateStr,
-        date: contractData.date,
-        html: contractData.html
-    });
-    localStorage.setItem('ez_signed_contracts', JSON.stringify(signedList));
-
     // Show success
     document.getElementById('statusBadge').textContent = 'Assinado';
     document.getElementById('statusBadge').className = 'badge badge-signed';
@@ -320,12 +320,11 @@ function confirmSignature() {
     document.getElementById('signDateTime').textContent = dateStr;
     document.getElementById('successOverlay').classList.add('show');
 
-    // After 5 seconds, redirect back to main app
+    // After 6 seconds, show "already signed" state
     setTimeout(() => {
-        const baseUrl = window.location.href.replace(/assinatura\.html.*$/, '');
-        const mainPage = baseUrl + 'vibe-prospecter-v3%20(1).html?signed=' + contractId;
-        window.location.href = mainPage;
-    }, 5000);
+        document.getElementById('successOverlay').classList.remove('show');
+        showAlreadySigned();
+    }, 6000);
 }
 
 // Initialize
