@@ -288,7 +288,7 @@ td{padding:9px 12px;vertical-align:middle;}
     <div class="topbar-right">
       <nav class="main-nav" style="display:flex; gap:10px; margin-right: 20px;">
         <button class="tab active" onclick="switchView('leads', this)" style="border-radius: 8px;">Prospecção</button>
-        <button class="tab" onclick="switchView('signed', this)" style="border-radius: 8px;" id="signedTab">✅ Contratos Assinados <span id="signedCount" style="background:var(--green);color:#000;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px;">0</span></button>
+        <button class="tab" onclick="switchView('signed', this)" style="border-radius: 8px;" id="signedTab">✅ Contratos <span id="signedCount" style="background:var(--green);color:#000;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px;">0</span></button>
       </nav>
       <button class="btn-ghost" onclick="clearAll()"><i class="ti ti-trash"></i> Limpar</button>
       <button class="btn-ghost" id="exportBtn"><i class="ti ti-download"></i> CSV</button>
@@ -494,93 +494,96 @@ td{padding:9px 12px;vertical-align:middle;}
     <div class="pagination" id="pagination"></div>
   </div>
 
-  <!-- CONTRACTS SECTION (inline) -->
-  <div style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 30px;">
-    <div class="hero-tag">🖋️ EZ Sign Archive</div>
-    <h2 style="font-family:'Syne',sans-serif; font-size: clamp(20px, 2.5vw, 28px); font-weight: 800; letter-spacing: -1px; margin-bottom: 25px;">Gestão de <em>Contratos</em></h2>
+  </div>
+</div>
 
-    <!-- TEMPLATES SECTION -->
-    <div style="margin-bottom: 30px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px;">
-        <h3 style="font-size: 14px; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 8px;"><i class="ti ti-template"></i> Meus Templates de Contrato</h3>
-        
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start;">
-            <!-- Upload Box -->
-            <div class="upload-area" onclick="document.getElementById('templateUpload').click()" style="flex: 1; min-width: 200px; max-width: 250px; border: 1px dashed var(--accent-border); background: var(--bg3); padding: 20px 12px; text-align: center; border-radius: var(--radius); cursor: pointer; transition: all 0.2s;">
-                <i class="ti ti-cloud-upload" style="font-size: 26px; color: var(--accent);"></i>
-                <p style="font-size: 12px; margin-top: 8px; color: var(--text); font-weight: 600;">Anexar Novo Template</p>
-                <p style="font-size: 10px; margin-top: 4px; color: var(--text3);">.txt ou .html</p>
-                <input type="file" id="templateUpload" style="display:none" accept=".txt,.html" onchange="handleTemplateUpload(event)">
-            </div>
-            
-            <!-- List -->
-            <div style="flex: 2; min-width: 280px; display: flex; flex-direction: column; gap: 8px;" id="templateList">
-                <div style="background: var(--bg3); border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div style="font-size: 12px; font-weight: 600; color: var(--text);">Termo NET Serviços (Padrão)</div>
-                        <div style="font-size: 10px; color: var(--green);">✓ Ativo · 16 cláusulas</div>
+</div>
+
+<!-- CONTRACTS MANAGEMENT & ARCHIVE VIEW -->
+<div id="signedView" class="layout" style="display:none; padding-top: 40px;">
+    <div class="hero-tag">🖋️ EZ Sign · Gestão e Arquivo</div>
+    <h1 style="margin-bottom: 10px;">Gestão de <em>Contratos</em></h1>
+    <p style="color: var(--text3); font-size: 13px; margin-bottom: 30px;">Gerencie seus modelos, emita novos links e visualize documentos assinados.</p>
+    
+    <!-- SECTION 1: TEMPLATES & EMISSIONS (TOP) -->
+    <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 25px; margin-bottom: 40px;">
+        <div style="margin-bottom: 30px;">
+            <h3 style="font-size: 14px; margin-bottom: 15px; color: var(--text); display: flex; align-items: center; gap: 8px;"><i class="ti ti-template"></i> Meus Templates de Contrato</h3>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start;">
+                <div class="upload-area" onclick="document.getElementById('templateUpload').click()" style="flex: 1; min-width: 200px; max-width: 250px; border: 1px dashed var(--accent-border); background: var(--bg3); padding: 20px 12px; text-align: center; border-radius: var(--radius); cursor: pointer;">
+                    <i class="ti ti-cloud-upload" style="font-size: 26px; color: var(--accent);"></i>
+                    <p style="font-size: 12px; margin-top: 8px; color: var(--text); font-weight: 600;">Anexar Novo Template</p>
+                    <input type="file" id="templateUpload" style="display:none" accept=".txt,.html" onchange="handleTemplateUpload(event)">
+                </div>
+                <div style="flex: 2; min-width: 280px; display: flex; flex-direction: column; gap: 8px;" id="templateList">
+                    <div style="background: var(--bg3); border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 12px; font-weight: 600; color: var(--text);">Termo NET Serviços (Padrão)</div>
+                            <div style="font-size: 10px; color: var(--green);">✓ Ativo · 16 cláusulas</div>
+                        </div>
+                        <span style="font-size: 9px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 6px; color: var(--text3);">Padrão</span>
                     </div>
-                    <span style="font-size: 9px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 6px; color: var(--text3);">Padrão</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-top: 1px solid var(--border); padding-top: 25px;">
+            <h3 style="font-size: 14px; color: var(--text); display: flex; align-items: center; gap: 8px;"><i class="ti ti-file-certificate"></i> Contratos Emitidos (Links Gerados)</h3>
+            <button class="btn-primary" style="font-size: 11px; padding: 6px 14px;" onclick="openManualContract()"><i class="ti ti-plus"></i> Novo Contrato</button>
+        </div>
+        <div class="table-wrap">
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Status</th>
+                            <th>Token</th>
+                            <th>Emissão</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contractsBody"></tbody>
+                </table>
+                <div class="empty-state" id="emptyContracts">
+                    <div class="empty-icon"><i class="ti ti-file-off"></i></div>
+                    <div class="empty-title">Nenhum contrato emitido</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- CONTRACTS TABLE -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3 style="font-size: 14px; color: var(--text); display: flex; align-items: center; gap: 8px;"><i class="ti ti-file-certificate"></i> Contratos Emitidos</h3>
-        <button class="btn-primary" style="font-size: 11px; padding: 6px 14px;" onclick="openManualContract()"><i class="ti ti-plus"></i> Novo Contrato</button>
-    </div>
-    <div class="table-wrap">
-        <div class="table-scroll">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Status</th>
-                        <th>Token de Assinatura</th>
-                        <th>Data de Emissão</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="contractsBody"></tbody>
-            </table>
-            <div class="empty-state" id="emptyContracts">
-                <div class="empty-icon"><i class="ti ti-file-off"></i></div>
-                <div class="empty-title">Nenhum contrato assinado</div>
-                <div class="empty-sub">Finalize prospecções ou crie um contrato manual</div>
-            </div>
+    <!-- SECTION 2: SIGNED CONTRACTS (BOTTOM - SCROLL DOWN) -->
+    <div style="border-top: 2px solid var(--green); padding-top: 40px; margin-top: 60px;">
+        <div class="hero-tag" style="background: var(--green-bg); color: var(--green);">✅ Arquivo Digital Concluído</div>
+        <h2 style="font-family:'Syne',sans-serif; font-size: clamp(22px, 2.5vw, 28px); font-weight: 800; letter-spacing: -1px; margin-bottom: 10px;">Contratos <em>Assinados</em></h2>
+        <p style="color: var(--text3); font-size: 13px; margin-bottom: 30px;">Histórico de documentos finalizados e validados pelos clientes.</p>
+        
+        <!-- Signed Contracts Cards -->
+        <div id="signedContractsList" style="margin-bottom: 40px;"></div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="emptySignedContracts" style="margin-bottom: 40px;">
+            <div class="empty-icon"><i class="ti ti-file-check"></i></div>
+            <div class="empty-title">Nenhum contrato assinado ainda</div>
+            <div class="empty-sub">Aparecerão aqui quando o cliente assinar o link</div>
         </div>
     </div>
-  </div>
-
-</div>
-
-<!-- SIGNED CONTRACTS VIEW -->
-<div id="signedView" class="layout" style="display:none; padding-top: 40px;">
-    <div class="hero-tag">✅ EZ Sign · Documentos Assinados</div>
-    <h1 style="margin-bottom: 10px;">Contratos <em>Assinados</em></h1>
-    <p style="color: var(--text3); font-size: 13px; margin-bottom: 30px;">Contratos que foram assinados digitalmente pelos seus clientes.</p>
     
-    <div class="table-wrap">
-        <div class="table-scroll">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>CPF/CNPJ</th>
-                        <th>Token EZ-Sign</th>
-                        <th>Data Assinatura</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="signedContractsBody"></tbody>
-            </table>
-            <div class="empty-state" id="emptySignedContracts">
-                <div class="empty-icon"><i class="ti ti-file-check"></i></div>
-                <div class="empty-title">Nenhum contrato assinado ainda</div>
-                <div class="empty-sub">Quando seus clientes assinarem, os documentos aparecerão aqui</div>
+    <!-- Contract Preview Panel (Sticky/Dynamic) -->
+    <div id="contractPreviewPanel" style="display:none; margin-top: 30px; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 30px rgba(0,0,0,0.2);">
+        <div style="background: linear-gradient(135deg, #0f172a, #1e293b); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="color: #fff; font-size: 15px; font-weight: 700;">📄 Visualização do Contrato</h3>
+                <p style="color: #94a3b8; font-size: 11px; margin-top: 3px;" id="previewSubtitle"></p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button onclick="printContract()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); color:#fff; padding:6px 14px; border-radius:8px; font-size:11px; cursor:pointer; font-family:Inter,sans-serif;"><i class="ti ti-printer"></i> Imprimir</button>
+                <button onclick="document.getElementById('contractPreviewPanel').style.display='none'" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); color:#fff; padding:6px 14px; border-radius:8px; font-size:11px; cursor:pointer; font-family:Inter,sans-serif;">✕ Fechar</button>
             </div>
         </div>
+        <div id="contractPreviewContent" style="padding: 30px; font-family: Georgia, 'Times New Roman', serif; font-size: 13.5px; line-height: 1.75; color: #334155; max-height: 70vh; overflow-y: auto;"></div>
+        <div id="contractSignatureBlock" style="padding: 20px 30px 30px; border-top: 2px solid #10b981; background: #f0fdf4; text-align: center;"></div>
     </div>
 </div>
 
@@ -1269,31 +1272,54 @@ function renderSignedContracts(){
     let signedList = [];
     try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e){}
     
-    const tbody = document.getElementById('signedContractsBody');
+    const container = document.getElementById('signedContractsList');
     const empty = document.getElementById('emptySignedContracts');
     
     // Update counter badge
     document.getElementById('signedCount').textContent = signedList.length;
     
     if(!signedList.length){
-        tbody.innerHTML = '';
+        container.innerHTML = '';
         empty.style.display = 'block';
         return;
     }
     empty.style.display = 'none';
     
-    tbody.innerHTML = signedList.map((c, i) => `
-        <tr>
-            <td><strong>${c.clientName}</strong></td>
-            <td style="color:var(--text3); font-size:12px;">${c.clientDoc || '—'}</td>
-            <td><code style="font-family:var(--mono); color:var(--accent2)">${c.token}</code></td>
-            <td style="color:var(--text3); font-size:12px;">${c.signedAt}</td>
-            <td>
-                <button class="icon-btn" title="Ver Contrato" onclick="viewSignedContract(${i})"><i class="ti ti-eye"></i></button>
-                <button class="icon-btn" title="Baixar" onclick="downloadSignedContract(${i})"><i class="ti ti-download"></i></button>
-            </td>
-        </tr>
+    container.innerHTML = signedList.map((c, i) => `
+        <div style="background: var(--bg2); border: 1px solid var(--green); border-left: 4px solid var(--green); border-radius: 12px; padding: 20px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="flex: 1; min-width: 200px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="background: var(--green-bg); color: var(--green); font-size: 10px; padding: 3px 10px; border-radius: 20px; font-weight: 700;">✅ ASSINADO</span>
+                    <code style="font-family: var(--mono); color: var(--accent2); font-size: 11px;">${c.token}</code>
+                </div>
+                <div style="font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px;">${c.clientName}</div>
+                <div style="font-size: 12px; color: var(--text3);">
+                    ${c.clientDoc ? `CPF/CNPJ: ${c.clientDoc} · ` : ''}Assinado em: ${c.signedAt}
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn-primary" style="font-size: 12px; padding: 8px 18px;" onclick="viewSignedContract(${i})"><i class="ti ti-eye"></i> Ver Contrato</button>
+                <button class="btn-ghost" style="font-size: 12px; padding: 8px 14px;" onclick="downloadSignedContract(${i})"><i class="ti ti-download"></i> Baixar</button>
+                <button class="btn-ghost" style="font-size: 12px; padding: 8px 14px; color: var(--red); border-color: rgba(239, 68, 68, 0.2);" onclick="removeSignedContract(${i})"><i class="ti ti-trash"></i></button>
+            </div>
+        </div>
     `).join('');
+}
+
+function removeSignedContract(idx){
+    if(!confirm("Tem certeza que deseja remover este contrato da lista? Esta ação não pode ser desfeita.")) return;
+    
+    let signedList = [];
+    try { signedList = JSON.parse(localStorage.getItem('ez_signed_contracts') || '[]'); } catch(e){}
+    
+    signedList.splice(idx, 1);
+    localStorage.setItem('ez_signed_contracts', JSON.stringify(signedList));
+    
+    renderSignedContracts();
+    showToast('<i class="ti ti-trash"></i> Contrato removido!');
+    
+    // Hide preview if open
+    document.getElementById('contractPreviewPanel').style.display = 'none';
 }
 
 function viewSignedContract(idx){
@@ -1302,30 +1328,38 @@ function viewSignedContract(idx){
     const c = signedList[idx];
     if(!c) return;
     
-    // Open a new window with the contract
+    // Show inline preview panel
+    const panel = document.getElementById('contractPreviewPanel');
+    panel.style.display = 'block';
+    
+    document.getElementById('previewSubtitle').textContent = `${c.clientName} · Token: ${c.token} · Assinado: ${c.signedAt}`;
+    document.getElementById('contractPreviewContent').innerHTML = c.html;
+    document.getElementById('contractSignatureBlock').innerHTML = `
+        <p style="font-size: 11px; color: #64748b; margin-bottom: 10px;">Assinatura Digital do Contratante:</p>
+        <div style="font-family: 'Dancing Script', cursive; font-size: 34px; color: #0f172a; margin-bottom: 12px;">${c.clientName}</div>
+        <div style="display: inline-block; background: #d1fae5; border: 1px solid #a7f3d0; padding: 10px 20px; border-radius: 8px;">
+            <strong style="color: #065f46;">✓ Contrato Assinado Digitalmente</strong><br>
+            <span style="font-size: 12px; color: #047857;">${c.signedAt} · Token: ${c.token}</span>
+        </div>
+    `;
+    
+    // Scroll to preview
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function printContract(){
+    const content = document.getElementById('contractPreviewContent').innerHTML;
+    const sig = document.getElementById('contractSignatureBlock').innerHTML;
     const win = window.open('', '_blank');
-    win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Contrato Assinado - ${c.clientName}</title>
+    win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Imprimir Contrato</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
-    .tb{background:#0f172a;color:#fff;padding:20px;text-align:center;border-bottom:3px solid #10b981}.tb h1{font-size:18px}
-    .tb p{font-size:11px;color:#94a3b8;margin-top:4px}.c{max-width:700px;margin:30px auto;padding:0 16px}
-    .cd{background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden;padding:30px}
-    .cb{font-family:Georgia,serif;font-size:13px;line-height:1.7;color:#334155}
-    .cb h2{font-family:Inter,sans-serif;font-size:16px;text-align:center;margin-bottom:8px;color:#0f172a}
-    .cb h3{font-family:Inter,sans-serif;font-size:14px;margin-top:20px;margin-bottom:8px;border-bottom:1px solid #e2e8f0;padding-bottom:5px;color:#0f172a}
-    .cb p{margin-bottom:10px;text-align:justify}.cb ul{margin-left:20px;margin-bottom:12px}.cb strong{color:#0f172a}
-    .s{background:#d1fae5;border:1px solid #a7f3d0;padding:20px;border-radius:8px;margin:20px 0;text-align:center}
-    .s h3{color:#065f46;margin-bottom:4px}.s p{color:#047857;font-size:13px}
-    .sig{text-align:center;margin:20px 0;padding:20px;border:2px solid #10b981;border-radius:8px;background:#f0fdf4}
-    .ft{text-align:center;padding:20px;font-size:11px;color:#94a3b8}</style></head>
-    <body><div class="tb"><h1>NET Serviços</h1><p>Contrato Assinado · Token: ${c.token}</p></div>
-    <div class="c"><div class="cd"><div class="cb">${c.html}</div>
-    <div class="sig"><p style="font-size:11px;color:#64748b;margin-bottom:8px;">Assinatura Digital do Contratante:</p>
-    <span style="font-family:'Dancing Script',cursive;font-size:32px;color:#0f172a;">${c.clientName}</span>
-    </div>
-    <div class="s"><h3>✓ Contrato Assinado Digitalmente</h3><p>Assinado por ${c.clientName} em ${c.signedAt}<br>Token: ${c.token}</p></div>
-    </div><div class="ft">NET Serviços · EZ-Sign Digital · Porto Velho, RO</div></div></body></html>`);
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;font-size:13px;line-height:1.7;color:#334155;padding:40px;max-width:700px;margin:0 auto}
+    h2{font-family:Inter,sans-serif;font-size:16px;text-align:center;margin-bottom:8px;color:#0f172a}
+    h3{font-family:Inter,sans-serif;font-size:14px;margin-top:20px;margin-bottom:8px;border-bottom:1px solid #e2e8f0;padding-bottom:5px;color:#0f172a}
+    p{margin-bottom:10px;text-align:justify}strong{color:#0f172a}@media print{body{padding:20px}}</style></head>
+    <body>${content}<div style="margin-top:30px;border-top:2px solid #10b981;padding-top:20px;">${sig}</div></body></html>`);
     win.document.close();
+    setTimeout(() => win.print(), 500);
 }
 
 function downloadSignedContract(idx){
@@ -1623,7 +1657,7 @@ function signContract(){
 
 let generatedContractId = '';
 
-function generateSigningLink(){
+async function generateSigningLink(){
     const contractHTML = document.getElementById('contractContent').innerHTML;
     const token = document.getElementById('signToken').textContent;
     const clientName = document.getElementById('f_nome').value || currentContractLead.nome || 'Cliente';
@@ -1651,20 +1685,39 @@ function generateSigningLink(){
     // Save to localStorage (local backup)
     localStorage.setItem('ez_contract_' + generatedContractId, JSON.stringify(contractData));
     
-    // Encode contract data into URL hash (base64) so it works cross-device
-    const jsonStr = JSON.stringify(contractData);
-    const encoded = btoa(encodeURIComponent(jsonStr));
-    
-    // Build signing link with data embedded
-    const deployedBase = 'https://ezprospecter.vercel.app/';
-    const signingLink = `${deployedBase}assinatura.html?id=${generatedContractId}#${encoded}`;
-    
-    // Show the link result panel
+    // Show loading state
     document.getElementById('linkResult').style.display = 'block';
-    document.getElementById('generatedLink').value = signingLink;
-    document.getElementById('linkStatus').innerHTML = '<span style="color:var(--green)">✓ Link ativo · Aguardando assinatura do cliente</span>';
+    document.getElementById('linkStatus').innerHTML = '<span style="color:var(--amber)">⏳ Gerando link seguro...</span>';
+    document.getElementById('generatedLink').value = 'Aguarde...';
     
-    showToast('✓ Link de assinatura gerado!');
+    try {
+        // Upload contract data to jsonblob.com (free, no auth needed)
+        const response = await fetch('https://jsonblob.com/api/jsonBlob', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(contractData)
+        });
+        
+        // Get the blob ID from the Location header or URL
+        const location = response.headers.get('Location') || response.url;
+        const blobId = location.split('/').pop();
+        
+        // Build short signing link
+        const deployedBase = 'https://ezprospecter.vercel.app/';
+        const signingLink = `${deployedBase}assinatura.html?blob=${blobId}`;
+        
+        // Show the link
+        document.getElementById('generatedLink').value = signingLink;
+        document.getElementById('linkStatus').innerHTML = '<span style="color:var(--green)">✓ Link ativo · Aguardando assinatura do cliente</span>';
+        
+        showToast('✓ Link de assinatura gerado!');
+    } catch(err) {
+        // Fallback: use localStorage-only link (works same device)
+        const signingLink = `https://ezprospecter.vercel.app/assinatura.html?id=${generatedContractId}`;
+        document.getElementById('generatedLink').value = signingLink;
+        document.getElementById('linkStatus').innerHTML = '<span style="color:var(--amber)">⚠ Link local gerado (funciona no mesmo navegador)</span>';
+        showToast('⚠ Link gerado em modo local');
+    }
     
     // Save lead status
     if(currentContractLead && currentContractLead.id) {
