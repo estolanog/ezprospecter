@@ -1648,12 +1648,16 @@ function generateSigningLink(){
         leadId: currentContractLead ? currentContractLead.id : null
     };
     
-    // Save to localStorage (shared with assinatura.html)
+    // Save to localStorage (local backup)
     localStorage.setItem('ez_contract_' + generatedContractId, JSON.stringify(contractData));
     
-    // Build signing link
-    const baseUrl = window.location.href.replace(/[^/]*$/, '');
-    const signingLink = `${baseUrl}assinatura.html?id=${generatedContractId}`;
+    // Encode contract data into URL hash (base64) so it works cross-device
+    const jsonStr = JSON.stringify(contractData);
+    const encoded = btoa(encodeURIComponent(jsonStr));
+    
+    // Build signing link with data embedded
+    const deployedBase = 'https://ezprospecter.vercel.app/';
+    const signingLink = `${deployedBase}assinatura.html?id=${generatedContractId}#${encoded}`;
     
     // Show the link result panel
     document.getElementById('linkResult').style.display = 'block';
