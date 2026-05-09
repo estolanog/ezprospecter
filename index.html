@@ -1871,26 +1871,30 @@ async function generateSigningLink(){
         });
         const data = await response.json();
         
-        // Get the document ID from the response body
-        const documentId = data.documentId || data.id || (data.url ? data.url.split('/').pop() : blobId);
+        // Get the document ID from the response body (npoint returns {id: "..."})
+        const documentId = data.id || data.documentId || (data.url ? data.url.split('/').pop() : null);
         
-        // Build short signing link
-        const deployedBase = 'https://ezprospecter.vercel.app/';
+        if(!documentId) throw new Error('ID não retornado pela nuvem');
+
+        // Build short signing link dynamically based on the current domain
+        const deployedBase = window.location.origin + '/';
         const signingLink = `${deployedBase}assinatura.html?np=${documentId}`;
         
         if(currentContractLead) currentContractLead.signingLink = signingLink;
 
         // Show the link
         document.getElementById('generatedLink').value = signingLink;
-        document.getElementById('linkStatus').innerHTML = '<span style="color:var(--green)">✓ Link ativo · Aguardando assinatura do cliente</span>';
+        document.getElementById('linkStatus').innerHTML = '<span style="color:var(--green)">✓ Link ativo · Disponível em qualquer dispositivo</span>';
         
-        showToast('✓ Link de assinatura gerado!');
+        showToast('✓ Link de assinatura gerado na nuvem!');
     } catch(err) {
+        console.error('Erro ao gerar link:', err);
         // Fallback: use localStorage-only link (works same device)
-        const signingLink = `https://ezprospecter.vercel.app/assinatura.html?id=${generatedContractId}`;
+        const deployedBase = window.location.origin + '/';
+        const signingLink = `${deployedBase}assinatura.html?id=${generatedContractId}`;
         document.getElementById('generatedLink').value = signingLink;
-        document.getElementById('linkStatus').innerHTML = '<span style="color:var(--amber)">⚠ Link local gerado (funciona no mesmo navegador)</span>';
-        showToast('⚠ Link gerado em modo local');
+        document.getElementById('linkStatus').innerHTML = '<span style="color:var(--amber)">⚠ Link local gerado (só funciona NESTE navegador)</span>';
+        showToast('⚠ Erro na nuvem. Gerado link local.');
         if(currentContractLead) currentContractLead.signingLink = signingLink;
     }
     
