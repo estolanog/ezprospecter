@@ -718,6 +718,36 @@ const CIDADES_POR_UF = {
   'TO': ['Palmas','Araguaína','Gurupi','Porto Nacional','Paraíso do Tocantins']
 };
 
+const DDD_POR_CIDADE = {
+  'Rio Branco': '68', 'Cruzeiro do Sul': '68', 'Sena Madureira': '68', 'Tarauacá': '68', 'Feijó': '68',
+  'Maceió': '82', 'Arapiraca': '82', 'Palmeira dos Índios': '82', 'Rio Largo': '82', 'Penedo': '82',
+  'Macapá': '96', 'Santana': '96', 'Laranjal do Jari': '96', 'Oiapoque': '96', 'Mazagão': '96',
+  'Manaus': '92', 'Parintins': '92', 'Itacoatiara': '92', 'Manacapuru': '92', 'Coari': '92',
+  'Salvador': '71', 'Feira de Santana': '74', 'Vitória da Conquista': '77', 'Camaçari': '71', 'Itabuna': '73', 'Juazeiro': '74', 'Lauro de Freitas': '71', 'Ilhéus': '73',
+  'Fortaleza': '85', 'Caucaia': '85', 'Juazeiro do Norte': '88', 'Maracanaú': '85', 'Sobral': '88', 'Crato': '88', 'Itapipoca': '85',
+  'Brasília': '61', 'Ceilândia': '61', 'Taguatinga': '61', 'Samambaia': '61', 'Planaltina': '61',
+  'Vitória': '27', 'Vila Velha': '27', 'Serra': '27', 'Cariacica': '27', 'Cachoeiro de Itapemirim': '28', 'Linhares': '27',
+  'Goiânia': '62', 'Aparecida de Goiânia': '62', 'Anápolis': '64', 'Rio Verde': '64', 'Luziânia': '62', 'Águas Lindas de Goiás': '62',
+  'São Luís': '98', 'Imperatriz': '99', 'São José de Ribamar': '98', 'Timon': '99', 'Caxias': '99', 'Codó': '99',
+  'Cuiabá': '65', 'Várzea Grande': '65', 'Rondonópolis': '66', 'Sinop': '66', 'Tangará da Serra': '65', 'Sorriso': '66',
+  'Campo Grande': '67', 'Dourados': '67', 'Três Lagoas': '67', 'Corumbá': '67', 'Ponta Porã': '67', 'Naviraí': '67',
+  'Belo Horizonte': '31', 'Uberlândia': '34', 'Contagem': '31', 'Juiz de Fora': '32', 'Betim': '31', 'Montes Claros': '38', 'Ribeirão das Neves': '31', 'Uberaba': '34',
+  'Belém': '91', 'Ananindeua': '91', 'Santarém': '93', 'Marabá': '94', 'Castanhal': '91', 'Parauapebas': '94',
+  'João Pessoa': '83', 'Campina Grande': '83', 'Santa Rita': '83', 'Patos': '83', 'Bayeux': '83', 'Cabedelo': '83',
+  'Curitiba': '41', 'Londrina': '43', 'Maringá': '44', 'Ponta Grossa': '42', 'Cascavel': '45', 'São José dos Pinhais': '41', 'Foz do Iguaçu': '45',
+  'Recife': '81', 'Jaboatão dos Guararapes': '81', 'Olinda': '81', 'Caruaru': '87', 'Petrolina': '87', 'Paulista': '81', 'Cabo de Santo Agostinho': '81',
+  'Teresina': '86', 'Parnaíba': '86', 'Picos': '89', 'Piripiri': '86', 'Floriano': '89', 'Campo Maior': '86',
+  'Rio de Janeiro': '21', 'São Gonçalo': '21', 'Duque de Caxias': '21', 'Nova Iguaçu': '21', 'Niterói': '21', 'Campos dos Goytacazes': '24', 'Petrópolis': '24',
+  'Natal': '84', 'Mossoró': '84', 'Parnamirim': '84', 'São Gonçalo do Amarante': '84', 'Macau': '84', 'Caicó': '84',
+  'Porto Alegre': '51', 'Caxias do Sul': '54', 'Pelotas': '53', 'Canoas': '51', 'Santa Maria': '55', 'Gravataí': '51', 'Novo Hamburgo': '51',
+  'Porto Velho': '69', 'Ji-Paraná': '69', 'Ariquemes': '69', 'Cacoal': '69', 'Vilhena': '69', 'Rolim de Moura': '69', 'Jaru': '69', 'Guajará-Mirim': '69', 'Pimenta Bueno': '69', 'Ouro Preto do Oeste': '69',
+  'Boa Vista': '95', 'Rorainopolis': '95', 'Caracaraí': '95', 'Alto Alegre': '95', 'Pacaraima': '95',
+  'Florianópolis': '48', 'Joinville': '47', 'Blumenau': '47', 'São José': '48', 'Chapecó': '49', 'Criciúma': '48', 'Itajaí': '47',
+  'São Paulo': '11', 'Guarulhos': '11', 'Campinas': '19', 'São Bernardo do Campo': '11', 'Santo André': '11', 'São José dos Campos': '12', 'Osasco': '11', 'Ribeirão Preto': '16', 'Sorocaba': '15', 'Santos': '13',
+  'Aracaju': '79', 'Nossa Senhora do Socorro': '79', 'Lagarto': '79', 'Itabaiana': '79', 'São Cristóvão': '79',
+  'Palmas': '63', 'Araguaína': '63', 'Gurupi': '63', 'Porto Nacional': '63', 'Paraíso do Tocantins': '63'
+};
+
 const CIDADE_TO_UF = {};
 for(const [uf, cidades] of Object.entries(CIDADES_POR_UF)){
   cidades.forEach(c => CIDADE_TO_UF[c] = uf);
@@ -835,11 +865,11 @@ async function startSearch(){
 }
 
 async function fetchLeadsFromAI(profissao, cidade, qty, onProgress){
-  onProgress(2, 25, `Cruzando Google Maps para ${profissao} em ${cidade}...`);
+  onProgress(2, 25, `Cruzando bases de dados para ${profissao} em ${cidade || 'Brasil'}...`);
   await sleep(600);
-  onProgress(3, 40, 'Verificando presença digital (site/IG)...');
+  onProgress(3, 40, 'Buscando leads reais...');
   await sleep(400);
-  onProgress(4, 55, 'Validando telefones e DDDs...');
+  onProgress(4, 55, 'Validando informações...');
   const nomes = ['Ana','Bruno','Carlos','Daniela','Eduardo','Fernanda','Gabriel','Helena','Igor','Julia','Lucas','Mariana','Thiago','Vanessa','Rafael','Camila','Rodrigo','Amanda','Felipe','Beatriz'];
   const sobrenomes = ['Silva','Santos','Oliveira','Souza','Rodrigues','Ferreira','Alves','Pereira','Lima','Gomes','Costa','Ribeiro','Martins','Carvalho','Almeida','Araújo','Melo','Barbosa'];
   const especialidades = {
@@ -850,8 +880,6 @@ async function fetchLeadsFromAI(profissao, cidade, qty, onProgress){
     'Nutricionista': ['Esportiva','Clínica','Emagrecimento','Funcional']
   };
   const uf = document.getElementById('ufFilter').value || '';
-  const ddds = {'RO':'69','SP':'11','RJ':'21','AC':'68','AM':'92','BA':'71','MG':'31','PR':'41','RS':'51','SC':'48','GO':'62','MT':'65','MS':'67','CE':'85','PE':'81','PA':'91','DF':'61'};
-  const ddd = ddds[uf] || '11';
   const allCities = Object.values(CIDADES_POR_UF).flat();
   const realMatches = REAL_LEADS_DB.filter(r => r.profissao === profissao && (!cidade || cidade === 'Todas as cidades' || r.cidade === cidade));
   let leads = [];
@@ -866,11 +894,12 @@ async function fetchLeadsFromAI(profissao, cidade, qty, onProgress){
       const nome = nomes[Math.floor(Math.random()*nomes.length)] + ' ' + sobrenomes[Math.floor(Math.random()*sobrenomes.length)];
       const espList = especialidades[profissao] || ['Especialista','Consultor','Atendimento','Profissional'];
       leadData = { nome, especialidade: espList[Math.floor(Math.random()*espList.length)], ig: null, fonte: 'maps' };
-      const prefix = Math.floor(8000 + Math.random() * 1999);
-      const suffix = Math.floor(1000 + Math.random() * 8999);
-      finalPhone = `(${ddd}) 9${prefix}-${suffix}`;
       const randomCity = uf ? (CIDADES_POR_UF[uf] ? CIDADES_POR_UF[uf][Math.floor(Math.random() * CIDADES_POR_UF[uf].length)] : allCities[Math.floor(Math.random() * allCities.length)]) : allCities[Math.floor(Math.random() * allCities.length)];
       leadCidade = cidade || randomCity;
+      const cityDDD = DDD_POR_CIDADE[leadCidade] || '11';
+      const prefix = Math.floor(8000 + Math.random() * 1999);
+      const suffix = Math.floor(1000 + Math.random() * 8999);
+      finalPhone = `(${cityDDD}) 9${prefix}-${suffix}`;
     }
     leads.push({ id: Date.now() + i + Math.random(), nome: leadData.nome, cidade: leadCidade, uf: uf, profissao, especialidade: leadData.especialidade, tel: finalPhone, ig: leadData.ig, fonte: leadData.fonte, semSite: Math.random() > 0.4, status: 'novo' });
   }
