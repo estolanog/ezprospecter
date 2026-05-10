@@ -707,7 +707,6 @@ function updateCidades(){
 
 let funnelChart;
 function initChart(){
-  loadData(); updateCidades(); updateStats(); renderTable();
   const ctx = document.getElementById('funnelChart').getContext('2d');
   funnelChart = new Chart(ctx, {
     type: 'bar',
@@ -729,8 +728,13 @@ function initChart(){
       }
     }
   });
+  loadData(); updateCidades(); updateStats(); renderTable();
 }
-document.addEventListener('DOMContentLoaded', initChart);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initChart);
+} else {
+  initChart();
+}
 
 function initials(n){ return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase(); }
 function rand(a){ return a[Math.floor(Math.random()*a.length)]; }
@@ -753,8 +757,9 @@ function setProgress(pct, lbl){
 async function startSearch(){
   if(allLeads.length >= LIMIT){ showToast('⚠ Limite atingido'); return; }
   const cidadeSel = document.getElementById('cidadeFilter').value;
-  const uf = document.getElementById('ufFilter').value;
-  const cidade = cidadeSel || (uf && uf !== '' ? '' : 'Porto Velho');
+  const uf = document.getElementById('ufFilter').value || '';
+  const cidade = cidadeSel || '';
+  const searchArea = cidade || uf ? (cidade || `todas as cidades de ${uf}`) : 'todo o Brasil';
   const nicho  = document.getElementById('nichoFilter').value  || 'Dentista';
   const qty    = parseInt(document.getElementById('qtdSelect').value);
   const btn = document.getElementById('genBtn');
@@ -771,7 +776,7 @@ async function startSearch(){
   const l1b = addLog(`Consultando satélites e bases do Google Maps via EZ-API...`, true);
   setProgress(15); await sleep(600);
   l1b.classList.remove('active'); l1b.classList.add('done');
-  const l2 = addLog(`Filtrando "${nicho}" em ${cidade || 'todo o Brasil'} sem presença digital...`, true);
+  const l2 = addLog(`Filtrando "${nicho}" em ${searchArea} sem presença digital...`, true);
   setProgress(25);
   try {
     const leads = await fetchLeadsFromAI(nicho, cidade, qty, (step, pct, msg) => {
@@ -814,9 +819,10 @@ async function fetchLeadsFromAI(profissao, cidade, qty, onProgress){
     'Arquiteto': ['Interiores','Projetos Residenciais','Comercial','Urbanismo'],
     'Nutricionista': ['Esportiva','Clínica','Emagrecimento','Funcional']
   };
-  const uf = document.getElementById('ufFilter').value || 'RO';
+  const uf = document.getElementById('ufFilter').value || '';
   const ddds = {'RO':'69','SP':'11','RJ':'21','AC':'68','AM':'92','BA':'71','MG':'31','PR':'41','RS':'51','SC':'48','GO':'62','MT':'65','MS':'67','CE':'85','PE':'81','PA':'91','DF':'61'};
   const ddd = ddds[uf] || '11';
+  const allCities = Object.values(CIDADES_POR_UF).flat();
   const realMatches = REAL_LEADS_DB.filter(r => r.profissao === profissao && (!cidade || cidade === 'Todas as cidades' || r.cidade === cidade));
   let leads = [];
   for(let i=0; i<qty; i++) {
@@ -833,7 +839,8 @@ async function fetchLeadsFromAI(profissao, cidade, qty, onProgress){
       const prefix = Math.floor(8000 + Math.random() * 1999);
       const suffix = Math.floor(1000 + Math.random() * 8999);
       finalPhone = `(${ddd}) 9${prefix}-${suffix}`;
-      leadCidade = cidade || (uf && CIDADES_POR_UF[uf] ? CIDADES_POR_UF[uf][Math.floor(Math.random() * CIDADES_POR_UF[uf].length)] : 'Porto Velho');
+      const randomCity = uf ? (CIDADES_POR_UF[uf] ? CIDADES_POR_UF[uf][Math.floor(Math.random() * CIDADES_POR_UF[uf].length)] : allCities[Math.floor(Math.random() * allCities.length)]) : allCities[Math.floor(Math.random() * allCities.length)];
+      leadCidade = cidade || randomCity;
     }
     leads.push({ id: Date.now() + i + Math.random(), nome: leadData.nome, cidade: leadCidade, uf: uf, profissao, especialidade: leadData.especialidade, tel: finalPhone, ig: leadData.ig, fonte: leadData.fonte, semSite: Math.random() > 0.4, status: 'novo' });
   }
