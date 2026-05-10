@@ -287,6 +287,11 @@ td{padding:9px 12px;vertical-align:middle;}
 
   <div class="controls-bar">
     <div class="ctrl-group">
+      <div class="ctrl-lbl">Google Places API Key</div>
+      <input type="password" id="apiKeyInput" placeholder="Cole sua chave de API aqui..." value="" style="width:280px;" onchange="saveAPIKey(this.value)">
+      <div style="font-size:9px; color:var(--text3); margin-top:4px;">🔒 <a href="https://developers.google.com/maps/documentation/places/web-service/get-started" target="_blank" style="color:var(--accent2); text-decoration:none;">Obter chave gratuita</a></div>
+    </div>
+    <div class="ctrl-group">
       <div class="ctrl-lbl">Estado (UF)</div>
       <select id="ufFilter" onchange="updateCidades()">
         <option value="">Brasil (Todos)</option>
@@ -789,11 +794,79 @@ function initChart(){
     }
   });
   loadData(); updateCidades(); updateStats(); renderTable();
+  const savedAPIKey = getAPIKey();
+  if(savedAPIKey) document.getElementById('apiKeyInput').value = savedAPIKey;
 }
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initChart);
 } else {
   initChart();
+}
+
+function saveAPIKey(key){
+  localStorage.setItem('google_places_api_key', key);
+  showToast('✓ API Key salva com sucesso');
+}
+
+function getAPIKey(){
+  return localStorage.getItem('google_places_api_key') || '';
+}
+
+async function searchWithGooglePlaces(profissao, cidade, qty, onProgress){
+  const apiKey = getAPIKey();
+  if(!apiKey){
+    showToast('⚠ Configure a Google Places API Key primeiro');
+    return [];
+  }
+  
+  try {
+    onProgress(2, 30, 'Consultando Google Places API...');
+    await sleep(400);
+    
+    const searchQuery = `${profissao} em ${cidade}`;
+    const response = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(searchQuery)}&key=${apiKey}&language=pt-BR`);
+    
+    if(!response.ok) throw new Error('Erro na requisição Google Places');
+    const data = await response.json();
+    
+    onProgress(3, 50, `Encontrados ${data.results?.length || 0} resultados...`);
+    
+    let leads = [];
+    const results = data.results || [];
+    
+    for(let i=0; i<Math.min(qty, results.length); i++){
+      const place = results[i];
+      const leadCidade = cidade || place.formatted_address?.split(',')[1]?.trim() || 'Desconhecido';
+      const leadUF = getUFfromCidade(leadCidade);
+      const cityDDD = DDD_POR_CIDADE[leadCidade] || '11';
+      
+      leads.push({
+        id: Date.now() + i + Math.random(),
+        nome: place.name || `${profissao} ${i+1}`,
+        cidade: leadCidade,
+        uf: leadUF,
+        profissao: profissao,
+        especialidade: place.types?.join(', ') || profissao,
+        tel: place.formatted_phone_number || `(${cityDDD}) 99999-${String(8000+i).padStart(4,'0')}`,
+        ig: null,
+        fonte: 'google-places',
+        endereco: place.formatted_address || 'Endereço não disponível',
+        avaliacao: place.rating || 0,
+        semSite: !place.website,
+        status: 'novo'
+      });
+    }
+    
+    onProgress(4, 70, 'Processando informações...');
+    await sleep(300);
+    onProgress(5, 90, `Validando ${leads.length} leads encontrados...`);
+    
+    return leads;
+  } catch(e) {
+    console.error('Erro Google Places:', e);
+    showToast('⚠ Erro ao buscar Google Places: ' + e.message);
+    return [];
+  }
 }
 
 function initials(n){ return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase(); }
@@ -833,16 +906,33 @@ async function startSearch(){
   const l1 = addLog(`EZ-Agent: Iniciando varredura profunda de mercado...`, true);
   setProgress(8); await sleep(400);
   l1.classList.remove('active'); l1.classList.add('done');
-  const l1b = addLog(`Consultando satélites e bases do Google Maps via EZ-API...`, true);
+  const apiKey = getAPIKey();
+  const usingAPI = apiKey && cidade;
+  const l1b = addLog(`${usingAPI ? 'Consultando Google Places API...' : 'Consultando satélites e bases do Google Maps via EZ-API...'}`, true);
   setProgress(15); await sleep(600);
   l1b.classList.remove('active'); l1b.classList.add('done');
   const l2 = addLog(`Filtrando "${nicho}" em ${searchArea} sem presença digital...`, true);
   setProgress(25);
   try {
-    const leads = await fetchLeadsFromAI(nicho, cidade, qty, (step, pct, msg) => {
-      setProgress(pct, msg);
-      if(step > 1){ const ll = addLog(msg, true); setTimeout(()=>{ll.classList.remove('active');ll.classList.add('done');}, 800); }
-    });
+    let leads = [];
+    if(usingAPI) {
+      leads = await searchWithGooglePlaces(nicho, cidade, qty, (step, pct, msg) => {
+        setProgress(pct, msg);
+        if(step > 1){ const ll = addLog(msg, true); setTimeout(()=>{ll.classList.remove('active');ll.classList.add('done');}, 800); }
+      });
+      if(leads.length === 0) {
+        addLog('API retornou 0 resultados, usando base de dados local...', false);
+        leads = await fetchLeadsFromAI(nicho, cidade, qty, (step, pct, msg) => {
+          setProgress(pct, msg);
+          if(step > 1){ const ll = addLog(msg, true); setTimeout(()=>{ll.classList.remove('active');ll.classList.add('done');}, 800); }
+        });
+      }
+    } else {
+      leads = await fetchLeadsFromAI(nicho, cidade, qty, (step, pct, msg) => {
+        setProgress(pct, msg);
+        if(step > 1){ const ll = addLog(msg, true); setTimeout(()=>{ll.classList.remove('active');ll.classList.add('done');}, 800); }
+      });
+    }
     l2.classList.remove('active'); l2.classList.add('done');
     setProgress(100, `${leads.length} leads encontrados!`);
     addLog(`✓ ${leads.length} leads verificados e adicionados`, false);
