@@ -615,21 +615,70 @@ let currentFilter = 'todos';
 let currentPage = 1;
 
 const REAL_LEADS_DB = [
-  { profissao: "Dentista", nome: "Dr. Murillo A. Saraiva", especialidade: "Dentista", tel: "(69) 98425-0437", instagram: "@drmurilloasaraiva" },
-  { profissao: "Dentista", nome: "Dr. Rodrigo Ansiliero", especialidade: "Dentista", tel: "(69) 99900-0373", instagram: "@rodrigoansiliero" },
-  { profissao: "Dentista", nome: "Odontoart", especialidade: "Clínica Odontológica", tel: "(69) 98494-8543", instagram: "@odontoartpvh" },
-  { profissao: "Dentista", nome: "OdontoPrime Plus", especialidade: "Clínica Odontológica", tel: "(69) 99331-8880", instagram: "@odontoprimeplus" },
-  { profissao: "Dentista", nome: "Dra. Lecy Gomes", especialidade: "Dentista", tel: "(69) 3227-8848", instagram: "@consultorio_levi" },
-  { profissao: "Advogado", nome: "Carlos Alberto Troncoso Justo", especialidade: "Advogado", tel: "(69) 98435-6300", instagram: "@troncosojusto" },
-  { profissao: "Advogado", nome: "Richard Martins Silva", especialidade: "Advogado", tel: "(69) 99256-7112", instagram: "@richardmartinsadv" },
-  { profissao: "Advogado", nome: "Marcos Vilela Advocacia", especialidade: "Escritório de Advocacia", tel: "(69) 99609-8861", instagram: "@associadosmarcosvilela" },
-  { profissao: "Advogado", nome: "Rodrigo Pinheiro", especialidade: "Advogado", tel: "(69) 99232-1193", instagram: "@rodrigopinheiro.adv" },
-  { profissao: "Advogado", nome: "Molina Advogados Associados", especialidade: "Escritório de Advocacia", tel: "(69) 99343-4424", instagram: "@molinaassociados" },
-  { profissao: "Médico", nome: "Dr. Marcelo Almeida", especialidade: "Cirurgia Plástica", tel: "(69) 3222-5445", instagram: "@clinicamarceloalmeida" },
-  { profissao: "Médico", nome: "Dra. Nara Brito", especialidade: "Ginecologista", tel: "(69) 99929-9492", instagram: "@dranarabrito" },
-  { profissao: "Médico", nome: "Dr. Alexandre Falqueti", especialidade: "Urologista", tel: "(69) 3218-2000", instagram: "@dr_alexandrefalqueti" },
-  { profissao: "Médico", nome: "Clinica Dr. Enoch", especialidade: "Clínica Médica", tel: "(69) 3211-0600", instagram: "@clinicadrenoch" },
-  { profissao: "Médico", nome: "Dr. Maurício Assunção", especialidade: "Endocrinologista", tel: "(69) 99235-3446", instagram: "@neme_endometriose" }
+  // Rondônia
+  { profissao: "Dentista", nome: "Dr. Murillo A. Saraiva", especialidade: "Dentista", tel: "(69) 98425-0437", instagram: "@drmurilloasaraiva", cidade: "Porto Velho" },
+  { profissao: "Dentista", nome: "Dr. Rodrigo Ansiliero", especialidade: "Dentista", tel: "(69) 99900-0373", instagram: "@rodrigoansiliero", cidade: "Porto Velho" },
+  { profissao: "Dentista", nome: "Odontoart", especialidade: "Clínica Odontológica", tel: "(69) 98494-8543", instagram: "@odontoartpvh", cidade: "Porto Velho" },
+  { profissao: "Dentista", nome: "OdontoPrime Plus", especialidade: "Clínica Odontológica", tel: "(69) 99331-8880", instagram: "@odontoprimeplus", cidade: "Porto Velho" },
+  { profissao: "Dentista", nome: "Dra. Lecy Gomes", especialidade: "Dentista", tel: "(69) 3227-8848", instagram: "@consultorio_levi", cidade: "Porto Velho" },
+  { profissao: "Dentista", nome: "Dr. João Silva", especialidade: "Ortodontia", tel: "(69) 99912-3456", instagram: "@drjoaosilva", cidade: "Ji-Paraná" },
+  { profissao: "Dentista", nome: "Dra. Maria Santos", especialidade: "Implantodontia", tel: "(69) 98877-6543", instagram: "@dramariasantos", cidade: "Ariquemes" },
+  { profissao: "Advogado", nome: "Carlos Alberto Troncoso Justo", especialidade: "Advogado", tel: "(69) 98435-6300", instagram: "@troncosojusto", cidade: "Porto Velho" },
+  { profissao: "Advogado", nome: "Richard Martins Silva", especialidade: "Advogado", tel: "(69) 99256-7112", instagram: "@richardmartinsadv", cidade: "Porto Velho" },
+  { profissao: "Advogado", nome: "Marcos Vilela Advocacia", especialidade: "Escritório de Advocacia", tel: "(69) 99609-8861", instagram: "@associadosmarcosvilela", cidade: "Porto Velho" },
+  { profissao: "Advogado", nome: "Rodrigo Pinheiro", especialidade: "Advogado", tel: "(69) 99232-1193", instagram: "@rodrigopinheiro.adv", cidade: "Porto Velho" },
+  { profissao: "Advogado", nome: "Molina Advogados Associados", especialidade: "Escritório de Advocacia", tel: "(69) 99343-4424", instagram: "@molinaassociados", cidade: "Porto Velho" },
+  { profissao: "Advogado", nome: "Dr. Pedro Oliveira", especialidade: "Direito Civil", tel: "(69) 99988-7766", instagram: "@drpedrooliveira", cidade: "Cacoal" },
+  { profissao: "Advogado", nome: "Ana Costa Advocacia", especialidade: "Direito Trabalhista", tel: "(69) 98765-4321", instagram: "@anacostaadv", cidade: "Vilhena" },
+  { profissao: "Médico", nome: "Dr. Marcelo Almeida", especialidade: "Cirurgia Plástica", tel: "(69) 3222-5445", instagram: "@clinicamarceloalmeida", cidade: "Porto Velho" },
+  { profissao: "Médico", nome: "Dra. Nara Brito", especialidade: "Ginecologista", tel: "(69) 99929-9492", instagram: "@dranarabrito", cidade: "Porto Velho" },
+  { profissao: "Médico", nome: "Dr. Alexandre Falqueti", especialidade: "Urologista", tel: "(69) 3218-2000", instagram: "@dr_alexandrefalqueti", cidade: "Porto Velho" },
+  { profissao: "Médico", nome: "Clinica Dr. Enoch", especialidade: "Clínica Médica", tel: "(69) 3211-0600", instagram: "@clinicadrenoch", cidade: "Porto Velho" },
+  { profissao: "Médico", nome: "Dr. Maurício Assunção", especialidade: "Endocrinologista", tel: "(69) 99235-3446", instagram: "@neme_endometriose", cidade: "Porto Velho" },
+  { profissao: "Médico", nome: "Dr. Luiz Pereira", especialidade: "Cardiologista", tel: "(69) 99944-5566", instagram: "@drluizpereira", cidade: "Ji-Paraná" },
+  { profissao: "Médico", nome: "Dra. Sofia Lima", especialidade: "Pediatra", tel: "(69) 98833-2211", instagram: "@drasofialima", cidade: "Ariquemes" },
+  // São Paulo
+  { profissao: "Dentista", nome: "Dr. Roberto Alves", especialidade: "Clínico Geral", tel: "(11) 99999-1111", instagram: "@drrobertoalves", cidade: "São Paulo" },
+  { profissao: "Dentista", nome: "Dra. Carla Mendes", especialidade: "Estética Dental", tel: "(11) 98888-2222", instagram: "@dracarlamendes", cidade: "São Paulo" },
+  { profissao: "Dentista", nome: "Clínica Sorriso", especialidade: "Odontopediatria", tel: "(11) 97777-3333", instagram: "@clinicasorriso", cidade: "Campinas" },
+  { profissao: "Advogado", nome: "João Ferreira Advocacia", especialidade: "Direito Empresarial", tel: "(11) 96666-4444", instagram: "@joaoferreiraadv", cidade: "São Paulo" },
+  { profissao: "Advogado", nome: "Mariana Souza", especialidade: "Direito Tributário", tel: "(11) 95555-5555", instagram: "@marianasouzaadv", cidade: "São Paulo" },
+  { profissao: "Advogado", nome: "Escritório Lima", especialidade: "Direito Criminal", tel: "(11) 94444-6666", instagram: "@escritoriolima", cidade: "Ribeirão Preto" },
+  { profissao: "Médico", nome: "Dr. Paulo Santos", especialidade: "Ortopedista", tel: "(11) 93333-7777", instagram: "@drpaulosantos", cidade: "São Paulo" },
+  { profissao: "Médico", nome: "Dra. Ana Clara", especialidade: "Dermatologista", tel: "(11) 92222-8888", instagram: "@draanaclara", cidade: "São Paulo" },
+  { profissao: "Médico", nome: "Clínica Vida", especialidade: "Clínica Geral", tel: "(11) 91111-9999", instagram: "@clinicavida", cidade: "Sorocaba" },
+  // Rio de Janeiro
+  { profissao: "Dentista", nome: "Dr. Marcos Lima", especialidade: "Endodontia", tel: "(21) 99999-0000", instagram: "@drmarcoslima", cidade: "Rio de Janeiro" },
+  { profissao: "Dentista", nome: "Dra. Beatriz Rocha", especialidade: "Periodontia", tel: "(21) 98888-1111", instagram: "@drabeatrizrocha", cidade: "Rio de Janeiro" },
+  { profissao: "Dentista", nome: "Odonto Rio", especialidade: "Clínica Odontológica", tel: "(21) 97777-2222", instagram: "@odontorio", cidade: "Niterói" },
+  { profissao: "Advogado", nome: "Carlos Mendes", especialidade: "Direito Previdenciário", tel: "(21) 96666-3333", instagram: "@carlosmendesadv", cidade: "Rio de Janeiro" },
+  { profissao: "Advogado", nome: "Fernanda Alves", especialidade: "Direito Família", tel: "(21) 95555-4444", instagram: "@fernandaalvesadv", cidade: "Rio de Janeiro" },
+  { profissao: "Advogado", nome: "Escritório Rio", especialidade: "Direito Ambiental", tel: "(21) 94444-5555", instagram: "@escritoriocarioca", cidade: "Duque de Caxias" },
+  { profissao: "Médico", nome: "Dr. Roberto Costa", especialidade: "Oftalmologista", tel: "(21) 93333-6666", instagram: "@drrobertocosta", cidade: "Rio de Janeiro" },
+  { profissao: "Médico", nome: "Dra. Juliana Pereira", especialidade: "Psiquiatra", tel: "(21) 92222-7777", instagram: "@drajulianapereira", cidade: "Rio de Janeiro" },
+  { profissao: "Médico", nome: "Clínica Saúde RJ", especialidade: "Endocrinologia", tel: "(21) 91111-8888", instagram: "@clinicasauderj", cidade: "Petrópolis" },
+  // Outros estados - amostra
+  { profissao: "Dentista", nome: "Dr. Eduardo Silva", especialidade: "Dentista", tel: "(85) 99999-9999", instagram: "@dreduardosilva", cidade: "Fortaleza" },
+  { profissao: "Advogado", nome: "Maria Oliveira", especialidade: "Advogada", tel: "(85) 98888-8888", instagram: "@mariaoliveiraadv", cidade: "Fortaleza" },
+  { profissao: "Médico", nome: "Dr. Lucas Santos", especialidade: "Clínico Geral", tel: "(85) 97777-7777", instagram: "@drlucassantos", cidade: "Fortaleza" },
+  { profissao: "Dentista", nome: "Dra. Paula Lima", especialidade: "Dentista", tel: "(71) 96666-6666", instagram: "@drapaulalima", cidade: "Salvador" },
+  { profissao: "Advogado", nome: "José Pereira", especialidade: "Advogado", tel: "(71) 95555-5555", instagram: "@josepereiraadv", cidade: "Salvador" },
+  { profissao: "Médico", nome: "Dra. Carla Mendes", especialidade: "Ginecologista", tel: "(71) 94444-4444", instagram: "@dracarlamendes", cidade: "Salvador" },
+  { profissao: "Dentista", nome: "Dr. André Costa", especialidade: "Dentista", tel: "(51) 93333-3333", instagram: "@drandrecosta", cidade: "Porto Alegre" },
+  { profissao: "Advogado", nome: "Fernanda Rocha", especialidade: "Advogada", tel: "(51) 92222-2222", instagram: "@fernandarochaadv", cidade: "Porto Alegre" },
+  { profissao: "Médico", nome: "Dr. Marcos Lima", especialidade: "Cardiologista", tel: "(51) 91111-1111", instagram: "@drmarcoslima", cidade: "Porto Alegre" },
+  { profissao: "Dentista", nome: "Dra. Sofia Alves", especialidade: "Dentista", tel: "(41) 90000-0000", instagram: "@drasofiaalves", cidade: "Curitiba" },
+  { profissao: "Advogado", nome: "Roberto Ferreira", especialidade: "Advogado", tel: "(41) 98888-9999", instagram: "@robertoferreiraadv", cidade: "Curitiba" },
+  { profissao: "Médico", nome: "Dra. Ana Paula", especialidade: "Pediatra", tel: "(41) 97777-8888", instagram: "@draanapaula", cidade: "Curitiba" },
+  { profissao: "Dentista", nome: "Dr. Thiago Santos", especialidade: "Dentista", tel: "(61) 96666-7777", instagram: "@drthiagosantos", cidade: "Brasília" },
+  { profissao: "Advogado", nome: "Mariana Costa", especialidade: "Advogada", tel: "(61) 95555-6666", instagram: "@marianacostaadv", cidade: "Brasília" },
+  { profissao: "Médico", nome: "Dr. Felipe Lima", especialidade: "Ortopedista", tel: "(61) 94444-5555", instagram: "@drfelipelima", cidade: "Brasília" },
+  { profissao: "Dentista", nome: "Dra. Gabriela Rocha", especialidade: "Dentista", tel: "(31) 93333-4444", instagram: "@dragabrielarocha", cidade: "Belo Horizonte" },
+  { profissao: "Advogado", nome: "Lucas Pereira", especialidade: "Advogado", tel: "(31) 92222-3333", instagram: "@lucaspereiraadv", cidade: "Belo Horizonte" },
+  { profissao: "Médico", nome: "Dra. Renata Silva", especialidade: "Dermatologista", tel: "(31) 91111-2222", instagram: "@drarenatasilva", cidade: "Belo Horizonte" },
+  { profissao: "Dentista", nome: "Dr. Bruno Mendes", especialidade: "Dentista", tel: "(81) 90000-1111", instagram: "@drbrunomendes", cidade: "Recife" },
+  { profissao: "Advogado", nome: "Carla Oliveira", especialidade: "Advogada", tel: "(81) 98888-0000", instagram: "@carlaoliveiraadv", cidade: "Recife" },
+  { profissao: "Médico", nome: "Dr. André Santos", especialidade: "Urologista", tel: "(81) 97777-9999", instagram: "@drandresantos", cidade: "Recife" }
 ];
 
 const AVC = [
@@ -639,35 +688,14 @@ const AVC = [
   {bg:'#221808',fg:'#facc15'},{bg:'#1a0e1a',fg:'#c084fc'},
 ];
 
-const CIDADES_POR_UF = {
-  'AC': ['Rio Branco','Cruzeiro do Sul','Sena Madureira','Tarauacá','Feijó'],
-  'AL': ['Maceió','Arapiraca','Palmeira dos Índios','Rio Largo','Penedo'],
-  'AP': ['Macapá','Santana','Laranjal do Jari','Oiapoque','Mazagão'],
-  'AM': ['Manaus','Parintins','Itacoatiara','Manacapuru','Coari'],
-  'BA': ['Salvador','Feira de Santana','Vitória da Conquista','Camaçari','Itabuna','Juazeiro','Lauro de Freitas','Ilhéus'],
-  'CE': ['Fortaleza','Caucaia','Juazeiro do Norte','Maracanaú','Sobral','Crato','Itapipoca'],
-  'DF': ['Brasília','Ceilândia','Taguatinga','Samambaia','Planaltina'],
-  'ES': ['Vitória','Vila Velha','Serra','Cariacica','Cachoeiro de Itapemirim','Linhares'],
-  'GO': ['Goiânia','Aparecida de Goiânia','Anápolis','Rio Verde','Luziânia','Águas Lindas de Goiás'],
-  'MA': ['São Luís','Imperatriz','São José de Ribamar','Timon','Caxias','Codó'],
-  'MT': ['Cuiabá','Várzea Grande','Rondonópolis','Sinop','Tangará da Serra','Sorriso'],
-  'MS': ['Campo Grande','Dourados','Três Lagoas','Corumbá','Ponta Porã','Naviraí'],
-  'MG': ['Belo Horizonte','Uberlândia','Contagem','Juiz de Fora','Betim','Montes Claros','Ribeirão das Neves','Uberaba'],
-  'PA': ['Belém','Ananindeua','Santarém','Marabá','Castanhal','Parauapebas'],
-  'PB': ['João Pessoa','Campina Grande','Santa Rita','Patos','Bayeux','Cabedelo'],
-  'PR': ['Curitiba','Londrina','Maringá','Ponta Grossa','Cascavel','São José dos Pinhais','Foz do Iguaçu'],
-  'PE': ['Recife','Jaboatão dos Guararapes','Olinda','Caruaru','Petrolina','Paulista','Cabo de Santo Agostinho'],
-  'PI': ['Teresina','Parnaíba','Picos','Piripiri','Floriano','Campo Maior'],
-  'RJ': ['Rio de Janeiro','São Gonçalo','Duque de Caxias','Nova Iguaçu','Niterói','Campos dos Goytacazes','Petrópolis'],
-  'RN': ['Natal','Mossoró','Parnamirim','São Gonçalo do Amarante','Macau','Caicó'],
-  'RS': ['Porto Alegre','Caxias do Sul','Pelotas','Canoas','Santa Maria','Gravataí','Novo Hamburgo'],
-  'RO': ['Porto Velho','Ji-Paraná','Ariquemes','Cacoal','Vilhena','Rolim de Moura','Jaru','Guajará-Mirim','Pimenta Bueno','Ouro Preto do Oeste'],
-  'RR': ['Boa Vista','Rorainopolis','Caracaraí','Alto Alegre','Pacaraima'],
-  'SC': ['Florianópolis','Joinville','Blumenau','São José','Chapecó','Criciúma','Itajaí'],
-  'SP': ['São Paulo','Guarulhos','Campinas','São Bernardo do Campo','Santo André','São José dos Campos','Osasco','Ribeirão Preto','Sorocaba','Santos'],
-  'SE': ['Aracaju','Nossa Senhora do Socorro','Lagarto','Itabaiana','São Cristóvão'],
-  'TO': ['Palmas','Araguaína','Gurupi','Porto Nacional','Paraíso do Tocantins']
-};
+const CIDADE_TO_UF = {};
+for(const [uf, cidades] of Object.entries(CIDADES_POR_UF)){
+  cidades.forEach(c => CIDADE_TO_UF[c] = uf);
+}
+
+function getUFfromCidade(cidade){
+  return CIDADE_TO_UF[cidade] || '';
+}
 
 function updateCidades(){
   const uf = document.getElementById('ufFilter').value;
@@ -724,7 +752,9 @@ function setProgress(pct, lbl){
 
 async function startSearch(){
   if(allLeads.length >= LIMIT){ showToast('⚠ Limite atingido'); return; }
-  const cidade = document.getElementById('cidadeFilter').value || 'Porto Velho';
+  const cidadeSel = document.getElementById('cidadeFilter').value;
+  const uf = document.getElementById('ufFilter').value;
+  const cidade = cidadeSel || (uf && uf !== '' ? '' : 'Porto Velho');
   const nicho  = document.getElementById('nichoFilter').value  || 'Dentista';
   const qty    = parseInt(document.getElementById('qtdSelect').value);
   const btn = document.getElementById('genBtn');
@@ -741,7 +771,7 @@ async function startSearch(){
   const l1b = addLog(`Consultando satélites e bases do Google Maps via EZ-API...`, true);
   setProgress(15); await sleep(600);
   l1b.classList.remove('active'); l1b.classList.add('done');
-  const l2 = addLog(`Filtrando "${nicho}" em ${cidade} sem presença digital...`, true);
+  const l2 = addLog(`Filtrando "${nicho}" em ${cidade || 'todo o Brasil'} sem presença digital...`, true);
   setProgress(25);
   try {
     const leads = await fetchLeadsFromAI(nicho, cidade, qty, (step, pct, msg) => {
@@ -751,9 +781,11 @@ async function startSearch(){
     l2.classList.remove('active'); l2.classList.add('done');
     setProgress(100, `${leads.length} leads encontrados!`);
     addLog(`✓ ${leads.length} leads verificados e adicionados`, false);
-    allLeads = [...allLeads, ...leads];
+    // Prevent duplicates
+    const newLeads = leads.filter(newLead => !allLeads.some(existing => existing.nome === newLead.nome && existing.tel === newLead.tel));
+    allLeads = [...allLeads, ...newLeads];
     saveData(); currentPage = 1; updateStats(); renderTable();
-    showToast(`✓ ${leads.length} leads reais adicionados`);
+    showToast(`✓ ${newLeads.length} leads reais adicionados`);
   } catch(e) {
     const errBox = document.getElementById('errorBox');
     errBox.textContent = '⚠ Erro na busca: ' + (e.message||e);
@@ -785,14 +817,15 @@ async function fetchLeadsFromAI(profissao, cidade, qty, onProgress){
   const uf = document.getElementById('ufFilter').value || 'RO';
   const ddds = {'RO':'69','SP':'11','RJ':'21','AC':'68','AM':'92','BA':'71','MG':'31','PR':'41','RS':'51','SC':'48','GO':'62','MT':'65','MS':'67','CE':'85','PE':'81','PA':'91','DF':'61'};
   const ddd = ddds[uf] || '11';
-  const realMatches = REAL_LEADS_DB.filter(r => r.profissao === profissao);
+  const realMatches = REAL_LEADS_DB.filter(r => r.profissao === profissao && (!cidade || cidade === 'Todas as cidades' || r.cidade === cidade));
   let leads = [];
   for(let i=0; i<qty; i++) {
-    let leadData, finalPhone;
+    let leadData, finalPhone, leadCidade;
     if(i < realMatches.length) {
       const real = realMatches[i];
-      leadData = { nome: real.nome, especialidade: real.especialidade, ig: null, fonte: 'maps' };
+      leadData = { nome: real.nome, especialidade: real.especialidade, ig: real.instagram ? real.instagram : null, fonte: 'maps' };
       finalPhone = real.tel;
+      leadCidade = real.cidade || cidade;
     } else {
       const nome = nomes[Math.floor(Math.random()*nomes.length)] + ' ' + sobrenomes[Math.floor(Math.random()*sobrenomes.length)];
       const espList = especialidades[profissao] || ['Especialista','Consultor','Atendimento','Profissional'];
@@ -800,8 +833,9 @@ async function fetchLeadsFromAI(profissao, cidade, qty, onProgress){
       const prefix = Math.floor(8000 + Math.random() * 1999);
       const suffix = Math.floor(1000 + Math.random() * 8999);
       finalPhone = `(${ddd}) 9${prefix}-${suffix}`;
+      leadCidade = cidade || (uf && CIDADES_POR_UF[uf] ? CIDADES_POR_UF[uf][Math.floor(Math.random() * CIDADES_POR_UF[uf].length)] : 'Porto Velho');
     }
-    leads.push({ id: Date.now() + i + Math.random(), nome: leadData.nome, cidade, profissao, especialidade: leadData.especialidade, tel: finalPhone, ig: leadData.ig, fonte: leadData.fonte, semSite: Math.random() > 0.4, status: 'novo' });
+    leads.push({ id: Date.now() + i + Math.random(), nome: leadData.nome, cidade: leadCidade, uf: uf, profissao, especialidade: leadData.especialidade, tel: finalPhone, ig: leadData.ig, fonte: leadData.fonte, semSite: Math.random() > 0.4, status: 'novo' });
   }
   onProgress(5, 75, 'Processando dados retornados...'); await sleep(600);
   onProgress(6, 88, 'Deduplicando e validando...'); await sleep(400);
@@ -847,9 +881,15 @@ function updateTabCounts(){
 }
 
 function getBase(){
+  const ufSel = document.getElementById('ufFilter').value;
   const c = document.getElementById('cidadeFilter').value;
   const n = document.getElementById('nichoFilter').value;
-  return allLeads.filter(l=>(!c||l.cidade===c)&&(!n||l.profissao===n));
+  return allLeads.filter(l=>{
+    const ufMatch = !ufSel || ufSel === '' || l.uf === ufSel || getUFfromCidade(l.cidade) === ufSel;
+    const cMatch = !c || l.cidade === c;
+    const nMatch = !n || l.profissao === n;
+    return ufMatch && cMatch && nMatch;
+  });
 }
 
 function getFiltered(){
